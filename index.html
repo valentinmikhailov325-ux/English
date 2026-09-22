@@ -133,6 +133,12 @@
   .navrow.grp{background:transparent;border:none;box-shadow:none;cursor:default;padding:6px 2px 2px;margin-bottom:6px;margin-top:6px}
   .navrow.grp .nrt b{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--accent)}
   #homeBack{flex:0 0 auto}
+  .wdcard{background:linear-gradient(135deg,var(--accent),#2c5580);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px;box-shadow:0 3px 12px rgba(58,110,165,.28)}
+  .wdlab{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;opacity:.85;margin-bottom:8px}
+  .wden{font-size:24px;font-weight:800;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .wden .spk{background:rgba(255,255,255,.2);border:none;color:#fff}
+  .wdru{font-size:18px;font-weight:600;margin-top:8px;color:#eaf2fb}
+  .wdcard .mini{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff}
 </style>
 
 <div class="wrap">
@@ -145,6 +151,7 @@
       <button class="mini" id="openSetHome" style="flex:0 0 auto">🔊 Голос</button>
     </div>
     <div class="statsrow" id="statsrow"></div>
+    <div id="wordday"></div>
     <div id="installTip" class="install" style="display:none">📲 Чтобы установить как приложение: в Safari нажми «Поделиться» → <b>«На экран “Домой”»</b>. Появится иконка, работает офлайн.</div>
     <div id="units"></div>
   </div>
@@ -1055,6 +1062,47 @@ const COURSE=[
 function byId(id){return TOPICS.find(t=>t.id===id);}
 function avgProg(ids){const p=getProg();const v=ids.map(id=>p[id]||0);return Math.round(v.reduce((a,b)=>a+b,0)/(ids.length||1));}
 function fileIds(f){return f.units.reduce((a,u)=>a.concat(u.ids),[]);}
+/* ===== материал для повторения (слово дня + режим «Повторение») ===== */
+const REVIEW={
+ transport:TRANSPORT,
+ compound:COMPOUND.map(c=>({en:c.ans,ru:c.ru})),
+ phrasal:PHRASAL.map(d=>({en:d.en,ru:d.ru})),
+ strong:STRONG.map(s=>({en:s.strong,ru:s.ru})),
+ raceword:RACEWORDS, u3b:U3B, opinion:OPINION.map(d=>({en:d.en,ru:d.ru})),
+ preps:PREPS.map(d=>({en:d.en,ru:d.ru})),
+ phone:PHONE.map(d=>({en:d.en,ru:d.ru})),
+ eding:EDWORDS, reflexive:REFL,
+ translate4a:TRANS4.map(d=>({en:d.model,ru:d.ru})),
+ translate4b:TRANS4B.map(d=>({en:d.model,ru:d.ru})),
+};
+function reviewPool(){const p=getProg();let pool=[];
+ Object.keys(REVIEW).forEach(id=>{if((p[id]||0)>0)pool=pool.concat(REVIEW[id]);});
+ if(!pool.length)Object.keys(REVIEW).forEach(id=>pool=pool.concat(REVIEW[id]));
+ const seen={};return pool.filter(x=>x&&x.en&&x.ru&&!seen[x.en]&&(seen[x.en]=1));}
+function renderWordDay(){const box=document.getElementById('wordday');const pool=reviewPool();
+ if(!pool.length){box.style.display='none';return;}box.style.display='';
+ const it=pool[Math.floor(Math.random()*pool.length)];
+ box.innerHTML=`<div class="wdcard">
+   <div class="wdlab">🔁 Слово дня — вспомни перевод</div>
+   <div class="wden">${cap(it.en)} <button class="spk" id="wdspk">🔊</button></div>
+   <div class="wdru" id="wdru" style="display:none">${it.ru}</div>
+   <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+     <button class="mini" id="wdreveal">Показать перевод</button>
+     <button class="mini" id="wdgo">🔁 Повторение (${Math.min(pool.length,12)})</button>
+   </div></div>`;
+ document.getElementById('wdspk').onclick=()=>speak(it.en);
+ document.getElementById('wdreveal').onclick=()=>{const r=document.getElementById('wdru');r.style.display='block';speak(it.en);};
+ document.getElementById('wdgo').onclick=openReview;
+}
+function openReview(){const pool=reviewPool();if(!pool.length)return;
+ topic={id:'__review',tt:'🔁 Повторение'};navUnit=null;
+ home.hidden=true;topicEl.hidden=false;
+ document.getElementById('ttl').textContent='🔁 Повторение';
+ document.getElementById('tabs').innerHTML='';
+ document.getElementById('ruleWrap').innerHTML='';
+ mode={build:()=>({kind:'quiz',items:bTranslate(shuffle(pool).slice(0,12),'ru')})};
+ start();
+}
 let navFile=null,navUnit=null;
 function setHead(title,sub,showBack){document.getElementById('homeTitle').textContent=title;
   document.getElementById('homeSub').textContent=sub;
@@ -1073,12 +1121,14 @@ function renderFiles(){
   sr.innerHTML=`<div class="stat-c"><div class="v">🔥 ${s.count||0}</div><div class="l">дней подряд</div></div>
     <div class="stat-c"><div class="v">${overall}%</div><div class="l">общий прогресс</div></div>
     <div class="stat-c"><div class="v">${doneCount}/${TOPICS.length}</div><div class="l">уроков пройдено</div></div>`;
+  renderWordDay();
   const box=document.getElementById('units');box.innerHTML='';
   COURSE.forEach(f=>box.appendChild(navrow(f.ic,f.t,f.sub,avgProg(fileIds(f)),()=>openFile(f))));
 }
 function openFile(f){navFile=f;navUnit=null;
   setHead(f.t,'Выбери юнит',true);
   document.getElementById('statsrow').style.display='none';
+  document.getElementById('wordday').style.display='none';
   document.getElementById('homeBack').onclick=renderFiles;
   const box=document.getElementById('units');box.innerHTML='';
   f.units.forEach(u=>box.appendChild(navrow(u.ic,u.t,u.sub,avgProg(u.ids),()=>openUnit(u))));
@@ -1086,6 +1136,7 @@ function openFile(f){navFile=f;navUnit=null;
 function openUnit(u){navUnit=u;
   setHead(u.t,'Выбери урок',true);
   document.getElementById('statsrow').style.display='none';
+  document.getElementById('wordday').style.display='none';
   document.getElementById('homeBack').onclick=()=>{if(navFile)openFile(navFile);else renderFiles();};
   const prog=getProg();
   const box=document.getElementById('units');box.innerHTML='';
