@@ -133,6 +133,9 @@
   .navrow.grp{background:transparent;border:none;box-shadow:none;cursor:default;padding:6px 2px 2px;margin-bottom:6px;margin-top:6px}
   .navrow.grp .nrt b{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--accent)}
   #homeBack{flex:0 0 auto}
+  .lvlbar{display:flex;gap:0;margin-bottom:12px;background:var(--chip);border:1px solid var(--chip-line);border-radius:10px;padding:3px;width:fit-content}
+  .lvlbtn{border:none;background:transparent;color:var(--muted);border-radius:8px;padding:7px 16px;font-size:13.5px;font-weight:800;cursor:pointer;font-family:inherit}
+  .lvlbtn.on{background:var(--accent);color:#fff}
   .wdcard{background:linear-gradient(135deg,var(--accent),#2c5580);color:#fff;border-radius:16px;padding:16px 18px;margin-bottom:16px;box-shadow:0 3px 12px rgba(58,110,165,.28)}
   .wdlab{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;opacity:.85;margin-bottom:8px}
   .wden{font-size:24px;font-weight:800;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -158,6 +161,7 @@
 
   <div id="topic" hidden>
     <div class="top"><button class="back" id="back">‹ Темы</button><span class="ttl" id="ttl"></span><button class="mini" id="openSetTopic" style="margin-left:auto">🔊 Голос</button></div>
+    <div id="levelbar"></div>
     <div class="tabs" id="tabs"></div>
     <div id="ruleWrap"></div>
     <div class="bar">
@@ -281,6 +285,72 @@ const GLOSS={
  sensitive:"чувствительный",still:"всё ещё",see:"видеть / до встречи",five:"пять",everybody:"все",
  pavement:"тротуар",instead:"вместо",because:"потому что",town:"город(ок)",cars:"машины",roadworks:"дорожные работы",always:"всегда",worse:"хуже",during:"во время",
 };
+/* --- расширение словарика кликов --- */
+Object.assign(GLOSS,{
+ // сокращения
+ "it's":"это есть (it is)","i'm":"я (I am)","i've":"я (I have)","i'll":"я буду (I will)","i'd":"я бы (I would)",
+ "he's":"он (he is)","she's":"она (she is)","we're":"мы (we are)","you're":"ты/вы (you are)","they're":"они (they are)",
+ "we've":"мы (we have)","you've":"ты (you have)","they've":"они (they have)","we'll":"мы будем","you'll":"ты будешь","she'd":"она бы","there's":"есть (there is)",
+ "that's":"это есть (that is)","what's":"что есть (what is)","let's":"давай (let us)","mustn't":"нельзя (must not)","shouldn't":"не следует","haven't":"не имею",
+ "didn't":"не (did not)","couldn't":"не мог","wouldn't":"не стал бы","won't":"не буду (will not)","wasn't":"не был","weren't":"не были","can't":"не может",
+ im:"я (I'm)",ive:"я (I've)",hes:"он (he's)",shes:"она (she's)",wasnt:"не был",couldnt:"не мог",sb:"кто-то (somebody)","sb's":"чей-то",
+ // возвратные и местоимения
+ myself:"сам себя (я)",yourself:"сам себя (ты)",himself:"сам себя (он)",herself:"сама себя",itself:"само себя",ourselves:"сами себя (мы)",yourselves:"сами себя (вы)",themselves:"сами себя (они)",
+ somebody:"кто-то",something:"что-то",else:"ещё / другой",nothing:"ничего",everybody2:"",mine:"мой",yours:"твой",
+ // модальные / служебные
+ must:"должен",think:"думать",want:"хотеть",wants:"хочет",need:"нужно",could:"мог бы",would:"бы",will:"буд. время",shall:"буд. время (shall)",
+ // глаголы
+ go:"идти / ехать",come:"приходить",came:"пришёл",gone:"ушёл (прич.)",went:"пошёл / поехал",call:"звонить",calling:"звоня",rang:"звонил",ringing:"звонит",
+ speak:"говорить",speaks:"говорит",speaking:"говоря",say:"сказать",said:"сказал",tell:"рассказать",told:"рассказал",mean:"иметь в виду",
+ read:"читать",wear:"носить (одежду)",swim:"плавать",dance:"танцевать",play:"играть",plays:"играет",cook:"готовить",cooked:"приготовил",cooking:"готовка",
+ drink:"пить",eat:"есть",buy:"покупать",bought:"купил",sell:"продавать",pay:"платить",paid:"заплатил",cost:"стоить",costs:"стоит",earns:"зарабатывает",wins:"выигрывает",own:"владеть / собственный",
+ turn:"повернуть",turned:"повернул",switch:"переключать",switches:"переключает",switched:"переключил",keep:"держать",kept:"держал",hold:"держать",
+ find:"находить",found:"нашёл",look:"смотреть",looked:"смотрел",looking:"смотря",see:"видеть",seen:"видел (прич.)",watch:"смотреть / часы",watched:"смотрел",
+ enjoy:"наслаждаться",enjoyed:"наслаждался",prepare:"готовиться",prepared:"подготовился",become:"стать",make:"делать",makes:"делает",made:"сделал",
+ open:"открывать",close2:"",cross:"переходить",fasten:"пристегнуть",avoid:"избегать",recommend:"рекомендовать",agree:"соглашаться",disagree:"не соглашаться",
+ realize:"осознавать",realized:"осознал",refuse:"отказываться",admit:"признавать",deal:"иметь дело (deal with)",prove:"доказывать",discover:"обнаружить",
+ overtake:"обгонять",break:"ломать / перерыв",delay:"задержка",miss:"скучать / пропустить",missing:"пропущенный",ended:"закончил",send:"отправлять",using:"используя",use:"использовать",
+ borrow:"занимать (брать)",loan:"давать взаймы",owe:"быть должным",save:"копить / спасать",saving:"копя",spend:"тратить",belong:"принадлежать",laugh:"смеяться",remind:"напоминать",
+ fell:"упал",hurt:"поранить / больно",behave:"вести себя",taught:"учил",learn:"учить(ся)",learning:"обучение",tie:"галстук / завязать",blamed:"винил",
+ messaged:"написал в мессенджере",swiping:"листая",swipe:"листать (пальцем)",interrupt:"прерывать",stores:"хранит",record:"записывать",reach:"дозвониться / достичь",
+ // прилагательные (в т.ч. сильные)
+ best:"лучший",better:"лучше",good:"хороший",bad:"плохой",worst:"худший",old:"старый",older:"старше",oldest:"самый старый",new:"новый",
+ hot:"жаркий",hotter:"жарче",hottest:"самый жаркий",cold:"холодный",busy:"занятой",busier:"более занятой",busiest:"самый занятой",
+ easy:"лёгкий",easier:"легче",easiest:"самый лёгкий",hard:"трудный / твёрдый",fast:"быстрый",faster:"быстрее",fastest:"самый быстрый",slow:"медленный",
+ big:"большой",small:"маленький",tiny:"крошечный",enormous:"огромный",crowded:"многолюдный",packed:"битком набитый",quiet:"тихий",silent:"безмолвный",loud:"громкий",deafening:"оглушительный",
+ beautiful:"красивый",lovely:"чудесный / милый",nice:"приятный",gorgeous:"великолепный",pretty:"хорошенький",ugly:"уродливый",hideous:"отвратительный",
+ tasty:"вкусный",delicious:"очень вкусный",awful:"ужасный",terrible:"ужасный",wonderful:"чудесный",amazing:"потрясающий",brilliant:"блестящий",clever:"умный",cleverer:"умнее",
+ powerful:"мощный",comfortable:"удобный",expensive:"дорогой",cheap:"дешёвый",cheaper:"дешевле",relaxing:"расслабляющий",exciting:"захватывающий",boring:"скучный",
+ wet:"мокрый",soaked:"промокший",dry:"сухой",valuable:"ценный",priceless:"бесценный",weird:"странный",bizarre:"причудливый",lazy:"ленивый",reliable:"надёжный",casual:"повседневный",
+ free:"свободный / бесплатный",happy:"счастливый",sure:"уверенный",special:"особый",local:"местный",public:"общественный",optional:"необязательный",forbidden:"запрещённый",prohibited:"запрещено",
+ // чувства -ed/-ing
+ bored:"скучающий",frightened:"напуганный",frightening:"пугающий",embarrassed:"смущённый",embarrassing:"неловкий",disappointed:"разочарованный",disappointing:"разочаровывающий",
+ depressed:"подавленный",depressing:"гнетущий",frustrated:"раздосадованный",frustrating:"раздражающий",annoyed:"раздражённый",annoying:"надоедливый",
+ tiring:"утомительный",surprised:"удивлённый",surprising:"удивительный",shocked:"шокированный",shocking:"шокирующий",confused:"сбитый с толку",confusing:"запутанный",worried:"обеспокоенный",worrying:"тревожный",
+ exhausted:"измождённый",amazed:"изумлённый",delighted:"в восторге",hilarious:"уморительный",fascinating:"увлекательный",boiling:"кипящий / очень жаркий",freezing:"ледяной",filthy:"грязный",starving:"голодный",terrified:"в ужасе",furious:"в ярости",positive:"уверенный",
+ // существительные
+ phone:"телефон",message:"сообщение",messages:"сообщения",voicemail:"голосовая почта",number:"номер",caller:"звонящий",ringtone:"рингтон",screen:"экран",finger:"палец",button:"кнопка",buttons:"кнопки",
+ photos:"фотографии",concert:"концерт",party:"вечеринка",wedding:"свадьба",interview:"собеседование",exam:"экзамен",exams:"экзамены",library:"библиотека",museum:"музей",museums:"музеи",theatre:"театр",
+ door:"дверь",window:"окно",house:"дом",flat:"квартира",garden:"сад",room:"комната",church:"церковь",beach:"пляж",park:"парк",hospital:"больница",office:"офис",
+ driver:"водитель",drivers:"водители",passenger:"пассажир",passengers:"пассажиры",nurse:"медсестра",lawyer:"юрист",musician:"музыкант",presenter:"ведущий",operator:"оператор",neighbours:"соседи",neighbors:"соседи",
+ cake:"торт",coffee:"кофе",salt:"соль",breakfast:"завтрак",dinner:"ужин",meal:"приём пищи",meals:"блюда",pizza:"пицца",fish:"рыба",salmon:"лосось",tuna:"тунец",medicine:"лекарство",
+ plane:"самолёт",helicopter:"вертолёт",boat:"лодка",cab:"такси",ambulance:"скорая",minibus:"маршрутка",subway:"метро",trolley:"тележка",tunnel:"тоннель",flight:"рейс",route:"маршрут",race:"гонка",
+ day:"день",year:"год",years:"годы",weekend:"выходные",weekends:"выходные",night:"ночь / вечер",nights:"ночи",morning:"утро",tonight:"сегодня вечером",tomorrow:"завтра",moment:"момент",
+ art:"искусство",history:"история",music:"музыка",tennis:"теннис",chess:"шахматы",guitar:"гитара",piano:"пианино",language:"язык",languages:"языки",salary:"зарплата",budget:"бюджет",bargain:"выгодная покупка",
+ idea:"идея",fact:"факт",point:"мысль / точка",opinion:"мнение",words:"слова",conversation:"разговор",news:"новости",information:"информация",law:"закон",team:"команда",family:"семья",children:"дети",daughter:"дочь",son:"сын",father:"отец",
+ luck:"удача",energy:"энергия",noise:"шум",heights:"высота (страх)",distance:"расстояние",destination:"пункт назначения",entrance:"вход",exit:"выход",border:"граница",countryside:"сельская местность",
+ effects:"эффекты",routine:"рутина",motorsport:"автоспорт",horror:"ужасы",coat:"пальто",keys:"ключи",whistle:"свисток",mirror:"зеркало",lecture:"лекция",piece:"кусок / часть",
+ // прочие
+ really:"действительно",very:"очень",lot:"много",bit:"немного",just:"просто / только что",already:"уже",yet:"ещё",still:"всё ещё",again:"снова",soon:"скоро",
+ well:"хорошо",badly:"плохо",slowly:"медленно",quickly:"быстро",carefully:"осторожно",beautifully:"красиво",perfectly:"идеально",regularly:"регулярно",finally:"наконец",easily:"легко",
+ next:"следующий",last:"прошлый / последний",after:"после",before:"до",until:"до тех пор",since:"с (тех пор)",ago:"назад (тому)",usually:"обычно",sometimes:"иногда",perhaps:"возможно",actually:"на самом деле",
+ through:"сквозь / через",across:"через",into:"в (внутрь)",away:"прочь",here:"здесь",now:"сейчас",completely:"полностью","far":"далеко",rather:"скорее / довольно",frankly:"откровенно",personally:"лично",concerned:"касается",
+ hand:"рука","other":"другой",own:"собственный",wrong:"неправильный",right:"правильный / правый",part:"часть",matter:"дело / иметь значение",case:"случай",kind:"добрый / вид",sort:"сорт / вид",
+ hate:"ненавидеть",love:"любить",feel:"чувствовать",felt:"чувствовал",worry:"волноваться",try:"пытаться",wait:"ждать",start:"начинать","starts":"начинается",
+ english:"английский",chinese:"китайский",spanish:"испанский",polish:"польский",french:"французский",german:"немецкий",japan:"Япония",paris:"Париж",europe:"Европа",spain:"Испания",china:"Китай",
+ // сравнения — служебные из ошибок
+ gooder:"(ошибка!) → better",goodest:"(ошибка!) → the best",baddest:"(ошибка!) → the worst",busier2:"",
+});
 
 /* ================= DATA ================= */
 const PREPS=[
@@ -617,6 +687,23 @@ function bPuzzleFrom(list,f){ return shuffle(list).map(d=>({t:'puzzle',lab:'Со
 /* пазл из предложения с подставленным ответом (коллокации, фразовые) */
 function bSentPuzzle(list,f){ return shuffle(list).map(d=>({t:'puzzle',lab:'Собери предложение',hint:d.ru,
   target:d.sent.replace('___',d[f])})); }
+/* --- универсальные билдеры для Уровня 2 (принимают список) --- */
+function bGapS(list,pool,lab,grid){ return shuffle(list).map(d=>({t:'choice',lab:lab||'Вставь слово',grid:grid!==false,
+  promptHTML:d.s.replace('___','<span class="gap"></span>'),speak:d.s.replace('___',d.a),hint:d.ru||'',
+  options:shuffle([d.a,...distract(pool,d.a,3)]),correct:d.a})); }
+function bOptS(list,lab){ return shuffle(list).map(d=>({t:'choice',lab:lab||'Выбери форму',
+  promptHTML:d.s.replace('___','<span class="gap"></span>'),speak:d.s.replace('___',d.a),
+  options:shuffle(d.o.slice()),correct:d.a,grid:(d.o.length===2)})); }
+function bPuzList(list){ return shuffle(list).map(d=>({t:'puzzle',lab:'Собери предложение',hint:d.ru,target:d.t||d.target})); }
+function bSoundList(list){ return shuffle(list).map(d=>({t:'choice',lab:'Слово с другим звуком',grid:true,
+  promptHTML:'🔊 послушай и выбери',speak:d.o.join(', '),options:shuffle(d.o.slice()),correct:d.a,after:d.note})); }
+function bTheList(list){ return shuffle(list).map(d=>({t:'choice',lab:'Как читается the?',grid:true,
+  promptHTML:d.p,speak:d.p,options:shuffle(["/ðə/","/ðiː/"]),correct:d.a})); }
+function bMinList(list){ return shuffle(list).map(p=>{const tgt=p[Math.floor(Math.random()*2)];
+  return {t:'choice',lab:'Какое слово? 🔊',grid:true,promptHTML:'🔊 послушай и выбери',speak:tgt,
+  options:shuffle(p.slice()),correct:tgt};}); }
+function bDictList(list){ return shuffle(list).map(s=>({t:'type',lab:'Аудио-диктант',promptHTML:'🔊 запиши предложение',
+  hint:'нажми 🔊 и напечатай, что услышал',answer:s,speak:s,speakNow:true})); }
 
 /* ================= 4A DATA ================= */
 const PHONE=[
@@ -763,7 +850,7 @@ function bChoiceOpt(list){return shuffle(list).map(d=>({t:'choice',lab:d.lab||'�
   promptHTML:d.a+'<span class="gap"></span>'+d.b,hint:d.hint||'',speak:(d.a+d.ans+d.b).replace(/A:|B:/g,''),
   options:shuffle(d.o.slice()),correct:d.ans,grid:(d.o.length===2)}));}
 function bPhraseGap(list,pool){return shuffle(list).map(d=>({t:'choice',lab:'Вставь фразу',
-  promptHTML:d.a+'<span class="gap"></span>'+d.b,speak:(d.a+d.ans+d.b).replace(/A:|B:/g,''),
+  promptHTML:d.a+'<span class="gap"></span>'+d.b,speak:(d.a+d.ans+d.b).replace(/A:|B:/g,''),tr:d.ru,
   options:shuffle(pool.slice()),correct:d.ans}));}
 function bPick(list,pool,lab){return shuffle(list).map(d=>({t:'choice',lab:lab||'Выбери слово',
   promptHTML:d.d,speak:d.w,tr:d.ru,options:shuffle([d.w,...distract(pool,d.w,3)]),correct:d.w}));}
@@ -904,6 +991,408 @@ const HW4B_REFL=[
  {a:"They've been saving to buy ",ans:"themselves",b:" a house.",o:["themselves","ourselves","yourselves","itself"]},
 ];
 
+/* ================= ДОМАШКА · УРОВЕНЬ 2 (новые примеры) ================= */
+/* hw3 (стр. 24–25) */
+const HW3_GRAM2=[
+ {a:"We ",ans:"haven't",b:" seen that film yet.",o:["haven't","didn't","don't","aren't"]},
+ {a:"This box is heavy. ",ans:"Shall",b:" I help you carry it?",o:["Shall","Do","Am","Have"]},
+ {a:"I've ",ans:"already",b:" finished my homework, so I'm free now.",o:["already","yet","ever","since"]},
+ {a:"She's worked here ",ans:"since",b:" 2019.",o:["since","for","during","ago"]},
+ {a:"This is ",ans:"the worst",b:" coffee I've ever had.",o:["the worst","worse","the baddest","worst"]},
+ {a:"My brother is training to be ",ans:"an",b:" engineer.",o:["a","an","the","—"]},
+];
+const HW3_VOC2=[
+ {w:["apple","banana","carrot","orange"],odd:"carrot",why:"carrot — овощ, остальные фрукты."},
+ {w:["generous","honest","selfish","kind"],odd:"selfish",why:"selfish — отрицательное, остальные положительные."},
+ {w:["train","tram","coach","ferry"],odd:"ferry",why:"ferry — водный транспорт."},
+ {w:["exhausted","enormous","boiling","tired"],odd:"tired",why:"tired — обычное, остальные «сильные»."},
+ {w:["earn","spend","save","owe"],odd:"save",why:"save (копить) — про накопления, остальные про траты/долг."},
+ {w:["excited","interested","bored","keen"],odd:"bored",why:"bored — скорее негативное чувство."},
+];
+const HW3_PRON2=[
+ {s:"cat /æ/",w:["man","bag","car","hat"],odd:"car",why:"car /ɑː/, остальные /æ/."},
+ {s:"go /əʊ/",w:["home","phone","some","road"],odd:"some",why:"some /ʌ/, остальные /əʊ/."},
+ {s:"see /iː/",w:["tree","bread","meet","key"],odd:"bread",why:"bread /e/, остальные /iː/."},
+ {s:"church /tʃ/",w:["cheese","watch","school","catch"],odd:"school",why:"school /k/, остальные /tʃ/."},
+ {s:"ship /ʃ/",w:["sugar","sure","sun","sure"],odd:"sun",why:"sun /s/, остальные /ʃ/."},
+];
+const HW3_JOBS2=[
+ {a:"He ",ans:"has been working",b:" as a pilot for ten years.",o:["works","is working","has been working"]},
+ {a:"A lot has changed ",ans:"since",b:" the 1990s.",o:["for","from","since"]},
+ {a:"The company was very kind ",ans:"to",b:" its new staff.",o:["at","to","with"]},
+ {a:"Now the work is ",ans:"more interesting",b:" than before.",o:["more interesting","interestinger","most interesting"]},
+ {a:"It's one of ",ans:"the best",b:" jobs she's ever had.",o:["better","best","the best"]},
+ {a:"She ",ans:"earns",b:" a good salary and enjoys it.",o:["costs","earns","wins"]},
+ {a:"She's been able to buy ",ans:"a",b:" flat in the city.",o:["a","an","the","—"]},
+ {a:"There's nothing that makes it ",ans:"a man's job",b:".",o:["man's job","a man's job","the man's job"]},
+];
+const HW3_SOC_POOL2=["That's really kind of you","Have we met before","Do you really mean it","The thing is","Give me a second"];
+const HW3_SOC2=[
+ {a:"A: I made you a cake. B: ",ans:"That's really kind of you",b:"!"},
+ {a:"A: ",ans:"Have we met before",b:"? B: Yes, at Anna's party."},
+ {a:"A: ",ans:"Do you really mean it",b:" about quitting? B: No, I was joking."},
+ {a:"A: Why are you upset? B: Nothing. ",ans:"The thing is",b:" I miss my family."},
+ {a:"A: Are you ready to go? B: ",ans:"Give me a second",b:", I'll get my keys."},
+];
+/* hw4a (стр. 26–28) */
+const HW4A_DEF2=[
+ {w:"hang up",d:"to end a call and put the phone down",ru:"повесить трубку"},
+ {w:"call back",d:"to phone sb again later",ru:"перезвонить"},
+ {w:"text",d:"to send a written message from a mobile",ru:"отправить СМС"},
+ {w:"voicemail",d:"a recorded message left on the phone",ru:"голосовая почта"},
+ {w:"engaged",d:"the line is busy and you can't get through",ru:"занято (линия)"},
+ {w:"go off",d:"to suddenly start ringing or sounding",ru:"зазвонить, сработать"},
+ {w:"put on hold",d:"to make a caller wait during a call",ru:"поставить в ожидание"},
+ {w:"dial",d:"to enter a number to make a call",ru:"набирать номер"},
+ {w:"cut off",d:"when a call is interrupted and stops",ru:"прервать связь"},
+ {w:"swipe",d:"to move your finger across the screen",ru:"листать свайпом"},
+ {w:"ringtone",d:"the sound a phone makes for a call",ru:"рингтон"},
+ {w:"leave a message",d:"to record words for sb to hear later",ru:"оставить сообщение"},
+];
+const HW4A_DEF_POOL2=HW4A_DEF2.map(x=>x.w);
+const HW4A_NY2=[
+ {a:"You ",ans:"mustn't",b:" use your phone while driving. It's illegal.",o:["mustn't","don't have to"],hint:"нельзя (запрет)"},
+ {a:"You ",ans:"don't have to",b:" wear a tie — it's a casual office.",o:["mustn't","don't have to"],hint:"не обязательно"},
+ {a:"Passengers ",ans:"mustn't",b:" lean out of the window.",o:["mustn't","don't have to"],hint:"нельзя"},
+ {a:"You ",ans:"don't have to",b:" book a ticket — you can pay on the bus.",o:["mustn't","don't have to"],hint:"не обязательно"},
+ {a:"You ",ans:"mustn't",b:" take photos in the museum.",o:["mustn't","don't have to"],hint:"нельзя"},
+];
+const HW4A_MODAL2=[
+ {a:"You ",ans:"should",b:" see a doctor if the pain continues.",o:["must","mustn't","should","shouldn't"]},
+ {a:"Students ",ans:"mustn't",b:" cheat in the exam.",o:["must","mustn't","should","shouldn't"]},
+ {a:"You ",ans:"must",b:" show your passport at the border.",o:["must","mustn't","should","shouldn't"]},
+ {a:"You ",ans:"shouldn't",b:" drink so much coffee at night.",o:["must","mustn't","should","shouldn't"]},
+ {a:"We ",ans:"should",b:" leave early to avoid the traffic.",o:["must","mustn't","should","shouldn't"]},
+ {a:"You ",ans:"mustn't",b:" be late for the interview.",o:["must","mustn't","should","shouldn't"]},
+ {a:"I ",ans:"must",b:" remember to charge my phone tonight.",o:["must","mustn't","should","shouldn't"]},
+];
+const HW4A_FIX2=[
+ {s:"You <b>mustn't</b> be quiet in the library — you can talk a bit.",ok:false,fix:"You should be quiet (совет)"},
+ {s:"<b>Do you have to</b> work on Saturdays?",ok:true},
+ {s:"I <b>must</b> get up early yesterday for the flight.",ok:false,fix:"I had to get up (прошедшее)"},
+ {s:"You look tired. <b>You should</b> go to bed.",ok:true},
+ {s:"You <b>don't have to</b> smoke here — it's forbidden.",ok:false,fix:"You mustn't smoke (запрет)"},
+ {s:"She <b>often should</b> travel for work.",ok:false,fix:"she often has to travel"},
+ {s:"Everyone <b>will have to</b> learn new software.",ok:true},
+ {s:"We <b>mustn't</b> pay last night — dinner was free.",ok:false,fix:"we didn't have to pay (прошедшее)"},
+];
+const HW4A_SILENT2=[
+ {w:"listen",o:["t","l","s","n"],ans:"t",note:"lis(t)en — t не читается"},
+ {w:"answer",o:["w","a","s","r"],ans:"w",note:"ans(w)er — w не читается"},
+ {w:"knife",o:["k","n","f","e"],ans:"k",note:"(k)nife — k не читается"},
+ {w:"comb",o:["b","c","m","o"],ans:"b",note:"com(b) — b не читается"},
+ {w:"castle",o:["t","c","s","l"],ans:"t",note:"cas(t)le — t не читается"},
+ {w:"honest",o:["h","o","n","t"],ans:"h",note:"(h)onest — h не читается"},
+ {w:"knee",o:["k","n","e","e"],ans:"k",note:"(k)nee — k не читается"},
+ {w:"Wednesday",o:["d","w","n","s"],ans:"d",note:"We(d)nesday — d не читается"},
+ {w:"receipt",o:["p","r","c","t"],ans:"p",note:"recei(p)t — p не читается"},
+ {w:"half",o:["l","h","a","f"],ans:"l",note:"ha(l)f — l не читается"},
+];
+/* hw4b (стр. 29–31) */
+const HW4B_CAN2=[
+ {a:"You need to ",ans:"be able to",b:" swim to join the club.",o:["can","be able to"]},
+ {a:"Sorry, I ",ans:"haven't been able to",b:" finish the report yet.",o:["haven't could","haven't been able to"]},
+ {a:"After an hour, firefighters ",ans:"were able to",b:" put out the fire.",o:["could","were able to"]},
+ {a:"I used to ",ans:"be able to",b:" run 10 km without stopping.",o:["can","be able to"]},
+ {a:"To get this job, you must ",ans:"be able to",b:" work weekends.",o:["can","be able to"]},
+ {a:"I love ",ans:"being able to",b:" work from home.",o:["being able to","can"]},
+];
+const HW4B_EDING2=[
+ {a:"I was really ",ans:"surprised",b:" to see you here.",o:["surprised","surprising"]},
+ {a:"The instructions were very ",ans:"confusing",b:".",o:["confused","confusing"]},
+ {a:"He felt ",ans:"embarrassed",b:" when he forgot her name.",o:["embarrassed","embarrassing"]},
+ {a:"The long flight was ",ans:"exhausting",b:".",o:["exhausted","exhausting"]},
+ {a:"We were ",ans:"shocked",b:" by the news.",o:["shocked","shocking"]},
+ {a:"This book is really ",ans:"interesting",b:".",o:["interested","interesting"]},
+ {a:"She's ",ans:"worried",b:" about the exam.",o:["worried","worrying"]},
+ {a:"The film was so ",ans:"boring",b:" that I fell asleep.",o:["bored","boring"]},
+ {a:"I'm ",ans:"disappointed",b:" that the trip was cancelled.",o:["disappointed","disappointing"]},
+ {a:"Skydiving sounds ",ans:"frightening",b:" to me.",o:["frightened","frightening"]},
+];
+const HW4B_REFL2=[
+ {a:"We really enjoyed ",ans:"ourselves",b:" on holiday.",o:["ourselves","yourselves","themselves","myself"]},
+ {a:"The children behaved ",ans:"themselves",b:" at the wedding.",o:["themselves","himself","ourselves","itself"]},
+ {a:"Be careful with the knife — don't cut ",ans:"yourself",b:".",o:["yourself","myself","himself","itself"]},
+ {a:"He introduced ",ans:"himself",b:" to the new team.",o:["himself","herself","themselves","yourself"]},
+ {a:"The heating turns ",ans:"itself",b:" off at night.",o:["itself","himself","themselves","yourself"]},
+ {a:"I taught ",ans:"myself",b:" to play the guitar.",o:["myself","yourself","himself","itself"]},
+ {a:"She looked at ",ans:"herself",b:" in the mirror.",o:["herself","himself","itself","yourself"]},
+];
+
+/* ================= УРОВЕНЬ 2 · данные (4A / 4B) ================= */
+const PHONE_POOL2=['dial a number','text','message','hang up','call back','leave a message','voicemail','the line is engaged','swipe through photos','go off','put on hold','cut off'];
+const PHONE2=[
+ {a:"Please ",ans:"call back",b:" after lunch, I'm busy now.",ru:"перезвонить"},
+ {a:"I couldn't reach him, so I left a ",ans:"voicemail",b:".",ru:"голосовая почта"},
+ {a:"Sorry, I have to ",ans:"hang up",b:" — my bus is here.",ru:"повесить трубку"},
+ {a:"Can you ",ans:"text",b:" me the address?",ru:"написать СМС"},
+ {a:"The operator will ",ans:"put on hold",b:" you for a minute.",ru:"поставить в ожидание"},
+ {a:"We got ",ans:"cut off",b:" in the tunnel.",ru:"разъединило связь"},
+ {a:"My alarm didn't ",ans:"go off",b:" this morning.",ru:"зазвонить, сработать"},
+ {a:"I keep calling but ",ans:"the line is engaged",b:".",ru:"линия занята"},
+];
+const MODAL2=[
+ {a:"You ",ans:"mustn't",b:" park in front of the exit.",o:MODAL_OPTS,hint:"нельзя (запрет)"},
+ {a:"You ",ans:"don't have to",b:" wear a tie — it's a casual office.",o:MODAL_OPTS,hint:"не обязательно"},
+ {a:"You ",ans:"should",b:" see a dentist about that tooth.",o:MODAL_OPTS,hint:"стоит (совет)"},
+ {a:"Passengers ",ans:"have to",b:" show a passport at the border.",o:MODAL_OPTS,hint:"надо (правило)"},
+ {a:"You ",ans:"shouldn't",b:" drink coffee so late.",o:MODAL_OPTS,hint:"не стоит"},
+ {a:"You ",ans:"mustn't",b:" use your phone during the flight.",o:MODAL_OPTS,hint:"нельзя"},
+ {a:"We ",ans:"don't have to",b:" hurry — the film starts at nine.",o:MODAL_OPTS,hint:"не обязательно"},
+ {a:"You ",ans:"should",b:" back up your files regularly.",o:MODAL_OPTS,hint:"стоит"},
+];
+const JUDGE_OB2=[
+ {s:"You <b>mustn't to</b> use your phone here.",ok:false,fix:"mustn't use (без to)"},
+ {s:"You <b>don't have to</b> pay — it's free.",ok:true},
+ {s:"He <b>have to</b> wear a uniform at work.",ok:false,fix:"He has to wear"},
+ {s:"You <b>should</b> drink more water.",ok:true},
+ {s:"I <b>must to</b> finish this today.",ok:false,fix:"I must finish (без to)"},
+ {s:"Yesterday I <b>must</b> stay late at work.",ok:false,fix:"I had to stay (прошедшее)"},
+];
+const SILENT2=[
+ {w:"comb",o:["b","c","m","o"],ans:"b",note:"com(b) — b не читается"},
+ {w:"knee",o:["k","n","e","kn"],ans:"k",note:"(k)nee — k не читается"},
+ {w:"climb",o:["b","c","l","m"],ans:"b",note:"clim(b) — b не читается"},
+ {w:"honest",o:["h","n","s","t"],ans:"h",note:"(h)onest — h не читается"},
+ {w:"castle",o:["t","c","s","l"],ans:"t",note:"cas(t)le — t не читается"},
+ {w:"knife",o:["k","n","f","e"],ans:"k",note:"(k)nife — k не читается"},
+ {w:"answer",o:["w","n","s","r"],ans:"w",note:"ans(w)er — w не читается"},
+ {w:"receipt",o:["p","r","c","t"],ans:"p",note:"recei(p)t — p не читается"},
+ {w:"salmon",o:["l","s","m","n"],ans:"l",note:"sa(l)mon — l не читается"},
+ {w:"Wednesday",o:["d","w","n","s"],ans:"d",note:"We(d)nesday — первое d не читается"},
+];
+const TRANS4A2=[
+ {ru:"Я горжусь своей командой.",model:"I'm proud of my team.",acc:["im proud of my team","i am proud of my team"]},
+ {ru:"Она боится высоты.",model:"She is afraid of heights.",acc:["she is afraid of heights","shes afraid of heights"]},
+ {ru:"Мы зависим от погоды.",model:"We depend on the weather.",acc:["we depend on the weather"]},
+ {ru:"Он извинился за опоздание.",model:"He apologized for being late.",acc:["he apologized for being late","he apologised for being late"]},
+ {ru:"Я интересуюсь историей.",model:"I'm interested in history.",acc:["im interested in history","i am interested in history"]},
+ {ru:"Они злятся на соседей.",model:"They are angry with their neighbours.",acc:["they are angry with their neighbours","they are angry with the neighbours","they are angry with their neighbors"]},
+ {ru:"Этот город известен своим сыром.",model:"This city is famous for its cheese.",acc:["this city is famous for its cheese","the city is famous for its cheese"]},
+ {ru:"Я устал от шума.",model:"I'm tired of the noise.",acc:["im tired of the noise","i am tired of the noise"]},
+];
+const CAN2=[
+ {a:"When I was a child I ",ans:"could",b:" swim for hours.",o:["could","was able to"],hint:"общая способность в прошлом"},
+ {a:"After a long search we finally ",ans:"were able to",b:" find the keys.",o:["could","were able to"],hint:"успех в конкретной ситуации"},
+ {a:"You need to ",ans:"be able to",b:" cook to live alone.",o:["can","be able to"]},
+ {a:"I've never ",ans:"been able to",b:" whistle.",o:["could","been able to"]},
+ {a:"She won't ",ans:"be able to",b:" come tomorrow.",o:["can","be able to"]},
+ {a:"He used to ",ans:"be able to",b:" run very fast.",o:["can","be able to"]},
+ {a:"I love ",ans:"being able to",b:" work from home.",o:["being able to","can"]},
+];
+const REFL2=[
+ {a:"The cat washed ",ans:"itself",b:" in the sun.",o:["itself","himself","themselves","yourself"]},
+ {a:"I taught ",ans:"myself",b:" to play the guitar.",o:["myself","yourself","himself","itself"]},
+ {a:"Kids, behave ",ans:"yourselves",b:"!",o:["yourselves","yourself","ourselves","themselves"]},
+ {a:"She looked at ",ans:"herself",b:" in the mirror.",o:["herself","himself","itself","themselves"]},
+ {a:"We cooked dinner ",ans:"ourselves",b:".",o:["ourselves","yourselves","themselves","myself"]},
+ {a:"He cut ",ans:"himself",b:" while shaving.",o:["himself","herself","itself","yourself"]},
+ {a:"They blamed ",ans:"themselves",b:" for the mistake.",o:["themselves","ourselves","yourselves","itself"]},
+ {a:"Make ",ans:"yourself",b:" at home. (один гость)",o:["yourself","yourselves","myself","himself"]},
+];
+const EDING2=[
+ {a:"The lecture was so ",ans:"boring",b:" that I fell asleep.",o:["bored","boring"]},
+ {a:"I'm ",ans:"interested",b:" in learning Spanish.",o:["interested","interesting"]},
+ {a:"The kids were ",ans:"excited",b:" about the trip.",o:["excited","exciting"]},
+ {a:"It was a ",ans:"shocking",b:" piece of news.",o:["shocked","shocking"]},
+ {a:"She felt ",ans:"confused",b:" by the instructions.",o:["confused","confusing"]},
+ {a:"The long flight was ",ans:"tiring",b:".",o:["tired","tiring"]},
+ {a:"He was ",ans:"surprised",b:" to see her.",o:["surprised","surprising"]},
+ {a:"I'm ",ans:"worried",b:" about the exam.",o:["worried","worrying"]},
+ {a:"The film was ",ans:"disappointing",b:".",o:["disappointed","disappointing"]},
+];
+const TRANS4B2=[
+ {ru:"Я умею играть на гитаре.",model:"I can play the guitar.",acc:["i can play the guitar"]},
+ {ru:"Он не смог найти работу.",model:"He wasn't able to find a job.",acc:["he wasnt able to find a job","he was not able to find a job","he couldnt find a job"]},
+ {ru:"Раньше она умела кататься на коньках.",model:"She used to be able to skate.",acc:["she used to be able to skate"]},
+ {ru:"Мы прекрасно провели время.",model:"We enjoyed ourselves.",acc:["we enjoyed ourselves"]},
+ {ru:"Книга была скучной.",model:"The book was boring.",acc:["the book was boring"]},
+ {ru:"Я боюсь высоты.",model:"I'm frightened of heights.",acc:["im frightened of heights","i am frightened of heights","im afraid of heights","i am afraid of heights"]},
+ {ru:"Дети сами оделись.",model:"The children dressed themselves.",acc:["the children dressed themselves","the kids dressed themselves"]},
+ {ru:"Тебе нужно уметь плавать.",model:"You need to be able to swim.",acc:["you need to be able to swim"]},
+];
+function phone2sent(){return PHONE2.map(d=>({ru:d.ru,en:(d.a+d.ans+d.b).replace(/\s+/g,' ').trim()}));}
+
+/* ================= FILE 3 · УРОВЕНЬ 2 (новые примеры) ================= */
+const TRANSPORT2=[
+ {en:"taxi",ru:"такси"},{en:"cab",ru:"такси (разг.)"},{en:"plane",ru:"самолёт"},
+ {en:"helicopter",ru:"вертолёт"},{en:"boat",ru:"лодка"},{en:"ship",ru:"корабль"},
+ {en:"ambulance",ru:"скорая помощь"},{en:"fire engine",ru:"пожарная машина"},
+ {en:"double-decker bus",ru:"двухэтажный автобус"},{en:"minibus",ru:"маршрутка, минивэн"},
+ {en:"subway",ru:"метро (США)"},{en:"cable car",ru:"канатная дорога, фуникулёр"},
+];
+const COMP_POOL2=["rush hour","traffic jam","petrol station","seat belt","speed limit","cycle lane","zebra crossing","car park","level crossing","one-way street"];
+const COMPOUND2=[
+ {a:"We got to the airport late because of the ",ans:"rush hour",b:" traffic.",ru:"час пик"},
+ {a:"Fasten your ",ans:"seat belt",b:" before we drive off.",ru:"ремень безопасности"},
+ {a:"You can't turn here — it's a ",ans:"one-way street",b:".",ru:"улица с односторонним движением"},
+ {a:"Leave the car in the ",ans:"car park",b:" near the station.",ru:"парковка"},
+ {a:"Always cross at the ",ans:"zebra crossing",b:".",ru:"пешеходный переход «зебра»"},
+ {a:"The ",ans:"speed limit",b:" here is 50 km/h.",ru:"ограничение скорости"},
+ {a:"Stop! The barriers are down at the ",ans:"level crossing",b:".",ru:"железнодорожный переезд"},
+ {a:"We were stuck in a ",ans:"traffic jam",b:" for an hour.",ru:"пробка"},
+ {a:"Let's fill up at the next ",ans:"petrol station",b:".",ru:"заправка"},
+ {a:"Cyclists must use the ",ans:"cycle lane",b:".",ru:"велодорожка"},
+];
+const PHRASAL2=[
+ {a:"What time shall we ",ans:"set off",b:" tomorrow morning?",ru:"отправиться в путь"},
+ {a:"Can you ",ans:"pick up",b:" some milk on your way home?",ru:"купить/забрать по пути"},
+ {a:"I'll ",ans:"drop off",b:" the parcel at the post office.",ru:"завезти, оставить"},
+ {a:"We've ",ans:"run out of",b:" petrol again!",ru:"закончилось (о запасе)"},
+ {a:"The car ",ans:"broke down",b:" on the motorway.",ru:"сломаться (о машине)"},
+ {a:"Hurry up or we'll ",ans:"miss out on",b:" the early train.",ru:"упустить возможность"},
+ {a:"Slow down and ",ans:"look out",b:" for cyclists!",ru:"будь внимателен"},
+ {a:"We got lost and ",ans:"ended up",b:" in the wrong town.",ru:"в итоге оказаться"},
+];
+const PHR_POOL2=["set off","pick up","drop off","run out of","broke down","miss out on","look out","ended up"];
+const STRONG2=[
+ {norm:"pretty",strong:"gorgeous",ru:"великолепный, шикарный"},
+ {norm:"ugly",strong:"hideous",ru:"отвратительный, уродливый"},
+ {norm:"tasty",strong:"delicious",ru:"очень вкусный"},
+ {norm:"bad",strong:"awful",ru:"ужасный"},
+ {norm:"clever",strong:"brilliant",ru:"гениальный, блестящий"},
+ {norm:"quiet",strong:"silent",ru:"абсолютно тихий"},
+ {norm:"wet",strong:"soaked",ru:"промокший насквозь"},
+ {norm:"crowded",strong:"packed",ru:"битком набитый"},
+ {norm:"valuable",strong:"priceless",ru:"бесценный"},
+ {norm:"loud",strong:"deafening",ru:"оглушительный"},
+ {norm:"weird",strong:"bizarre",ru:"странный, причудливый"},
+ {norm:"good",strong:"wonderful",ru:"чудесный, прекрасный"},
+];
+const RACEWORDS2=[
+ {en:"overtake",ru:"обгонять"},{en:"break down",ru:"сломаться"},{en:"delay",ru:"задержка"},
+ {en:"on time",ru:"вовремя"},{en:"passenger",ru:"пассажир"},{en:"journey",ru:"поездка, путь"},
+ {en:"get on",ru:"садиться (в транспорт)"},{en:"get off",ru:"выходить (из транспорта)"},
+ {en:"in the lead",ru:"впереди, лидируя"},{en:"finish line",ru:"финишная черта"},
+];
+const U3B2=[
+ {en:"come across",ru:"наткнуться, случайно найти"},{en:"point out",ru:"указать, отметить"},
+ {en:"according to",ru:"согласно, по словам"},{en:"in fact",ru:"на самом деле"},
+ {en:"realize",ru:"осознавать, понимать"},{en:"refuse",ru:"отказываться"},
+ {en:"admit",ru:"признавать"},{en:"deal with",ru:"справляться с, иметь дело с"},
+ {en:"so that",ru:"чтобы, так что"},{en:"on purpose",ru:"нарочно, специально"},
+];
+const OPINION2=[
+ {en:"I completely agree",ru:"Я полностью согласен",sent:"I completely agree with you."},
+ {en:"I'm not so sure",ru:"Я не очень уверен",sent:"I'm not so sure about that."},
+ {en:"That's a good point",ru:"Это хорошее замечание",sent:"That's a good point, actually."},
+ {en:"I see what you mean",ru:"Я понимаю, о чём ты",sent:"I see what you mean, but I disagree."},
+ {en:"On the other hand",ru:"С другой стороны",sent:"On the other hand, it's cheaper."},
+ {en:"As far as I'm concerned",ru:"Что касается меня",sent:"As far as I'm concerned, it's fine."},
+ {en:"I couldn't agree more",ru:"Полностью согласен",sent:"I couldn't agree more with you."},
+ {en:"You've got a point",ru:"В этом есть смысл",sent:"You've got a point there."},
+ {en:"Frankly speaking",ru:"Откровенно говоря",sent:"Frankly speaking, I didn't like it."},
+ {en:"It depends",ru:"Смотря как, зависит",sent:"It depends on the weather."},
+];
+const CMP_FORM2=[
+ {s:"A plane is ___ a train.",word:"fast",a:"faster than",o:["faster than","the fastest","more fast than","fastest"]},
+ {s:"This is ___ film I've ever seen.",word:"good",a:"the best",o:["the best","better than","the goodest","the most good"]},
+ {s:"My new flat is ___ my old one.",word:"comfortable",a:"more comfortable than",o:["more comfortable than","the most comfortable","comfortabler than","more comfortable"]},
+ {s:"Today is ___ day of the week.",word:"busy",a:"the busiest",o:["the busiest","busier than","the most busy","busiest"]},
+ {s:"He speaks English ___ me.",word:"well",a:"better than",o:["better than","the best","gooder than","more well than"]},
+ {s:"That was ___ meal of my life.",word:"bad",a:"the worst",o:["the worst","worse than","the baddest","the most bad"]},
+];
+const CMP_ONEWORD2=[
+ {s:"My car isn't as fast ___ yours.",a:"as"},
+ {s:"It's ___ most crowded city in the world.",a:"the"},
+ {s:"The film was longer ___ I expected.",a:"than"},
+ {s:"This is the best pizza I've ___ eaten.",a:"ever"},
+ {s:"She drives ___ carefully than her brother.",a:"more"},
+ {s:"We don't travel as much ___ we used to.",a:"as"},
+ {s:"What's the tallest building ___ Europe?",a:"in"},
+ {s:"Flying is ___ expensive than the train.",a:"more"},
+];
+const CMP_JUDGE2=[
+ {s:"This is <b>the more comfortable</b> seat on the plane.",ok:false,fix:"the most comfortable"},
+ {s:"A bike is <b>cheaper than</b> a car.",ok:true},
+ {s:"The film was <b>as good than</b> the book.",ok:false,fix:"as good as"},
+ {s:"He runs <b>more quickly than</b> me.",ok:true},
+ {s:"There weren't <b>as much people as</b> yesterday.",ok:false,fix:"as many people as"},
+ {s:"It was <b>the most easy</b> exam of all.",ok:false,fix:"the easiest"},
+ {s:"Today is <b>hotter than</b> yesterday.",ok:true},
+ {s:"She sings <b>more beautiful than</b> her sister.",ok:false,fix:"more beautifully than"},
+];
+const CMP_PUZZLE2=[
+ {t:"A helicopter is faster than a boat.",ru:"Вертолёт быстрее лодки."},
+ {t:"This is the most exciting trip of my life.",ru:"Это самая захватывающая поездка в моей жизни."},
+ {t:"The train is more comfortable than the coach.",ru:"Поезд удобнее автобуса."},
+ {t:"London is the biggest city in the UK.",ru:"Лондон — самый большой город в Великобритании."},
+ {t:"Flying is less relaxing than taking the train.",ru:"Летать менее спокойно, чем ехать на поезде."},
+];
+const ART_GAP2=[
+ {s:"She works as ___ nurse in a hospital.",a:"a"},
+ {s:"Can you pass me ___ salt, please?",a:"the"},
+ {s:"I usually have ___ breakfast at eight.",a:"—"},
+ {s:"He bought ___ umbrella because it was raining.",a:"an"},
+ {s:"What ___ lovely garden you have!",a:"a"},
+ {s:"We watched ___ moon through the telescope.",a:"the"},
+ {s:"My brother is ___ honest man.",a:"an"},
+ {s:"I don't like ___ coffee in the morning.",a:"—"},
+ {s:"It's ___ most beautiful beach in Spain.",a:"the"},
+ {s:"They go to ___ church every Sunday.",a:"—"},
+ {s:"She plays ___ piano very well.",a:"the"},
+ {s:"He wants to be ___ engineer.",a:"an"},
+];
+const ART_CIRCLE2=[
+ {s:"That's ___ I've ever tasted.",o:["the best cake","best cake"],a:"the best cake"},
+ {s:"We're going to Italy ___.",o:["next summer","the next summer"],a:"next summer"},
+ {s:"I think ___ are cleverer than people think.",o:["dogs","the dogs"],a:"dogs"},
+ {s:"Did you close ___ before you left?",o:["the window","window"],a:"the window"},
+ {s:"His wife is ___.",o:["a lawyer","lawyer"],a:"a lawyer"},
+ {s:"We went to ___ yesterday evening.",o:["the theatre","theatre"],a:"the theatre"},
+ {s:"Do you think ___ makes people lazy?",o:["money","the money"],a:"money"},
+ {s:"What ___! I love the colour.",o:["a nice car","nice car"],a:"a nice car"},
+];
+const ART_FIX2=[
+ {s:"She wants to become <b>lawyer</b>.",ok:false,fix:"a lawyer"},
+ {s:"We're meeting <b>the next week</b>.",ok:false,fix:"next week"},
+ {s:"<b>The happiness</b> is more important than money.",ok:false,fix:"Happiness"},
+ {s:"He <b>goes to bed</b> at eleven every night.",ok:true},
+ {s:"I see the dentist <b>twice a year</b>.",ok:true},
+ {s:"Have you read <b>book</b> I gave you?",ok:false,fix:"the book"},
+ {s:"That was <b>one of the worst films</b> ever.",ok:true},
+ {s:"What <b>terrible weather</b> we're having!",ok:true},
+];
+const PREPS2=[
+ {en:"be interested in",prep:"in",ru:"интересоваться",sent:"Are you interested ___ history?"},
+ {en:"be afraid of",prep:"of",ru:"бояться",sent:"My son is afraid ___ the dark."},
+ {en:"be good at",prep:"at",ru:"быть хорошим в",sent:"She's really good ___ tennis."},
+ {en:"depend on",prep:"on",ru:"зависеть от",sent:"Our plans depend ___ the weather."},
+ {en:"be proud of",prep:"of",ru:"гордиться",sent:"They're proud ___ their daughter."},
+ {en:"be famous for",prep:"for",ru:"быть известным чем-то",sent:"Paris is famous ___ its cafés."},
+ {en:"be married to",prep:"to",ru:"быть женатым/замужем за",sent:"She's married ___ a musician."},
+ {en:"be different from",prep:"from",ru:"отличаться от",sent:"This one is different ___ that one."},
+ {en:"believe in",prep:"in",ru:"верить в",sent:"Do you believe ___ luck?"},
+ {en:"be angry with",prep:"with",ru:"сердиться на кого-то",sent:"He was angry ___ his brother."},
+ {en:"be keen on",prep:"on",ru:"увлекаться",sent:"I'm not keen ___ horror films."},
+ {en:"pay for",prep:"for",ru:"платить за",sent:"Who paid ___ the meal?"},
+];
+const PREP_POOL2=[...new Set(PREPS2.map(p=>p.prep))];
+const PRON_SOUND2=[
+ {o:["chef","chair","cheese","chin"],a:"chef",note:"chef — /ʃ/, остальные /tʃ/"},
+ {o:["general","garden","giant","gym"],a:"garden",note:"garden — /g/, остальные /dʒ/"},
+ {o:["sure","sugar","sun","sunshine"],a:"sun",note:"sun — /s/, остальные /ʃ/"},
+];
+const PRON_THE2=[
+ {p:"the orange",a:"/ðiː/"},{p:"the house",a:"/ðə/"},{p:"the airport",a:"/ðiː/"},
+ {p:"the European",a:"/ðə/"},{p:"the honest man",a:"/ðiː/"},{p:"the sky",a:"/ðə/"},
+ {p:"the umbrella",a:"/ðiː/"},{p:"the window",a:"/ðə/"},{p:"the exit",a:"/ðiː/"},
+ {p:"the answer",a:"/ðiː/"},{p:"the road",a:"/ðə/"},{p:"the island",a:"/ðiː/"},
+];
+const MINPAIR2=[["cheer","jeer"],["batch","badge"],["match","Madge"],["sheep","cheap"],["share","chair"],["wish","witch"]];
+const DIALOGUE2=[
+ "I'd rather live in the countryside than in the city.",
+ "The traffic in this town is getting worse every year.",
+ "You don't have to book, but I'd recommend it.",
+ "We set off early to avoid the rush hour.",
+ "She's the most reliable driver I know.",
+ "There aren't as many trains on Sundays.",
+ "I'm looking forward to the weekend.",
+ "He apologized for being late again.",
+ "This is the best coffee I've ever had.",
+ "They ended up missing the last bus home.",
+];
+
 /* ================= TOPICS ================= */
 const ARTRULE='<b>a / an</b> — исчисляемое ед. числа, впервые или «один из многих»; выбор по <b>звуку</b>: a car, an egg, an hour, an engineer. <b>the</b> — конкретный / известный / единственный предмет, второе упоминание, а также с превосходной степенью (the best). <b>—</b> (без артикля) — мн. число и неисчисляемое в общем смысле (cats, money), названия спорта и приёмов пищи (football, breakfast), устойчивые <i>go to work / school</i>, <i>next week</i>.';
 const TOPICS=[
@@ -913,6 +1402,12 @@ const TOPICS=[
    {id:'en',label:'🇷🇺→🇬🇧',build:()=>({kind:'quiz',items:bTranslate(TRANSPORT,'en')})},
    {id:'type',label:'⌨️ печать',build:()=>({kind:'quiz',items:bTypeWord(TRANSPORT)})},
    {id:'match',label:'🔗 пары',build:()=>bMatch(TRANSPORT)},
+ ],modes2:[
+   {id:'flash2',label:'🗂 карточки',build:()=>bFlash(TRANSPORT2)},
+   {id:'ru2',label:'🇬🇧→🇷🇺',build:()=>({kind:'quiz',items:bTranslate(TRANSPORT2,'ru')})},
+   {id:'en2',label:'🇷🇺→🇬🇧',build:()=>({kind:'quiz',items:bTranslate(TRANSPORT2,'en')})},
+   {id:'type2',label:'⌨️ печать',build:()=>({kind:'quiz',items:bTypeWord(TRANSPORT2)})},
+   {id:'match2',label:'🔗 пары',build:()=>bMatch(TRANSPORT2)},
  ]},
  {id:'compound',ic:'🅿️',tt:'Словосочетания',ts:'traffic jam, rush hour…',modes:[
    {id:'gap',label:'✍️ в предложении',rule:'<b>Составные существительные (коллокации)</b> — устойчивые пары слов, которые запоминаются целиком: <i>rush hour</i> (час пик), <i>traffic jam</i> (пробка), <i>petrol station</i> (заправка). Вставляй всё словосочетание, а не одно слово.',build:()=>({kind:'quiz',items:bCompound()})},
@@ -920,12 +1415,20 @@ const TOPICS=[
    {id:'puzzle',label:'🧩 пазл',build:()=>({kind:'quiz',items:bSentPuzzle(COMPOUND,'ans')})},
    {id:'flash',label:'🗂 карточки',build:()=>bFlash(COMPOUND.map(c=>({en:c.ans,ru:c.ru})))},
    {id:'match',label:'🔗 пары',build:()=>bMatch(COMPOUND.map(c=>({en:c.ans,ru:c.ru})))},
+ ],modes2:[
+   {id:'gap2',label:'✍️ в предложении',rule:'Вставь всё словосочетание целиком. Новые предложения на те же коллокации.',build:()=>({kind:'quiz',items:bPhraseGap(COMPOUND2,COMP_POOL2)})},
+   {id:'type2',label:'⌨️ печать',build:()=>({kind:'quiz',items:bTypeAns(COMPOUND2,'ans')})},
+   {id:'match2',label:'🔗 пары',build:()=>bMatch(COMPOUND2.map(c=>({en:c.ans,ru:c.ru})))},
  ]},
  {id:'phrasal',ic:'🔁',tt:'Фразовые глаголы',ts:'pick up, set off, run out of…',modes:[
    {id:'gap',label:'✍️ в предложении',build:()=>({kind:'quiz',items:bPhrasalGap()})},
    {id:'type',label:'⌨️ печать',build:()=>({kind:'quiz',items:bTypeAns(PHRASAL,'en')})},
    {id:'puzzle',label:'🧩 пазл',build:()=>({kind:'quiz',items:bSentPuzzle(PHRASAL,'en')})},
    {id:'match',label:'🔗 пары',build:()=>bMatch(PHRASAL)},
+ ],modes2:[
+   {id:'gap2',label:'✍️ в предложении',rule:'Вставь фразовый глагол. Новые предложения: overtake, break down, run out of…',build:()=>({kind:'quiz',items:bPhraseGap(PHRASAL2,PHR_POOL2)})},
+   {id:'type2',label:'⌨️ печать',build:()=>({kind:'quiz',items:bTypeAns(PHRASAL2,'ans')})},
+   {id:'match2',label:'🔗 пары',build:()=>bMatch(PHRASAL2.map(p=>({en:p.ans,ru:p.ru})))},
  ]},
  {id:'strong',ic:'💪',tt:'Сильные прилагательные',ts:'big→enormous, hot→boiling…',modes:[
    {id:'form',label:'сильная форма',rule:'<b>Сильные (крайние) прилагательные</b> уже значат «очень»: big→<b>enormous</b>, hot→<b>boiling</b>, tired→<b>exhausted</b>. С ними НЕ говорят <i>very</i> — только <b>absolutely</b> / <b>really</b>.',build:()=>({kind:'quiz',items:bStrongForm()})},
@@ -933,6 +1436,11 @@ const TOPICS=[
    {id:'ru',label:'🇷🇺 перевод',build:()=>({kind:'quiz',items:bTranslate(STRONG.map(s=>({en:s.strong,ru:s.ru})),'ru')})},
    {id:'type',label:'⌨️ печать',build:()=>({kind:'quiz',items:bStrongType()})},
    {id:'flash',label:'🗂 карточки',build:()=>bFlash(STRONG.map(s=>({en:s.strong,ru:s.ru})))},
+ ],modes2:[
+   {id:'pairs2',label:'🔗 обычное↔сильное',rule:'Новые пары: pretty→gorgeous, tasty→delicious, bad→awful…',build:()=>({kind:'match',pairs:STRONG2.map(s=>[cap(s.norm),cap(s.strong)])})},
+   {id:'ru2',label:'🇷🇺 перевод',build:()=>({kind:'quiz',items:bTranslate(STRONG2.map(s=>({en:s.strong,ru:s.ru})),'ru')})},
+   {id:'type2',label:'⌨️ печать',build:()=>({kind:'quiz',items:bTypeWord(STRONG2.map(s=>({en:s.strong,ru:s.ru})))})},
+   {id:'flash2',label:'🗂 карточки',build:()=>bFlash(STRONG2.map(s=>({en:s.strong,ru:s.ru})))},
  ]},
  {id:'raceword',ic:'🏁',tt:'Слова из текста',ts:'race, route, crash into…',modes:[
    {id:'ru',label:'🇬🇧→🇷🇺',build:()=>({kind:'quiz',items:bTranslate(RACEWORDS,'ru')})},
@@ -941,6 +1449,12 @@ const TOPICS=[
    {id:'puzzle',label:'🧩 пазл',build:()=>({kind:'quiz',items:bPuzzleFrom(RACEWORDS,'en')})},
    {id:'match',label:'🔗 пары',build:()=>bMatch(RACEWORDS)},
    {id:'flash',label:'🗂 карточки',build:()=>bFlash(RACEWORDS)},
+ ],modes2:[
+   {id:'ru2',label:'🇬🇧→🇷🇺',build:()=>({kind:'quiz',items:bTranslate(RACEWORDS2,'ru')})},
+   {id:'en2',label:'🇷🇺→🇬🇧',build:()=>({kind:'quiz',items:bTranslate(RACEWORDS2,'en')})},
+   {id:'type2',label:'⌨️ печать',build:()=>({kind:'quiz',items:bTypeWord(RACEWORDS2)})},
+   {id:'match2',label:'🔗 пары',build:()=>bMatch(RACEWORDS2)},
+   {id:'flash2',label:'🗂 карточки',build:()=>bFlash(RACEWORDS2)},
  ]},
  {id:'u3b',ic:'👥',tt:'Доп. слова 3B',ts:'tend to, prove, maze…',modes:[
    {id:'ru',label:'🇬🇧→🇷🇺',build:()=>({kind:'quiz',items:bTranslate(U3B,'ru')})},
@@ -949,6 +1463,12 @@ const TOPICS=[
    {id:'puzzle',label:'🧩 пазл',build:()=>({kind:'quiz',items:bPuzzleFrom(U3B,'en')})},
    {id:'match',label:'🔗 пары',build:()=>bMatch(U3B)},
    {id:'flash',label:'🗂 карточки',build:()=>bFlash(U3B)},
+ ],modes2:[
+   {id:'ru2',label:'🇬🇧→🇷🇺',build:()=>({kind:'quiz',items:bTranslate(U3B2,'ru')})},
+   {id:'en2',label:'🇷🇺→🇬🇧',build:()=>({kind:'quiz',items:bTranslate(U3B2,'en')})},
+   {id:'type2',label:'⌨️ печать',build:()=>({kind:'quiz',items:bTypeWord(U3B2)})},
+   {id:'match2',label:'🔗 пары',build:()=>bMatch(U3B2)},
+   {id:'flash2',label:'🗂 карточки',build:()=>bFlash(U3B2)},
  ]},
  {id:'opinion',ic:'🗣',tt:'Мнение и реплики',ts:'In my opinion, To be honest…',modes:[
    {id:'ru',label:'🇬🇧→🇷🇺',build:()=>({kind:'quiz',items:bTranslate(OPINION,'ru')})},
@@ -957,6 +1477,12 @@ const TOPICS=[
    {id:'puzzle',label:'🧩 пазл',rule:'Собери фразу или реплику из слов. Слушай 🔊 и следи за порядком: <i>вводная часть → подлежащее → сказуемое</i>. Напр. <i>In my opinion, the film was too long.</i>',build:()=>({kind:'quiz',items:bPuzzleFrom(OPINION,'sent')})},
    {id:'match',label:'🔗 пары',build:()=>bMatch(OPINION)},
    {id:'flash',label:'🗂 карточки',build:()=>bFlash(OPINION)},
+ ],modes2:[
+   {id:'ru2',label:'🇬🇧→🇷🇺',build:()=>({kind:'quiz',items:bTranslate(OPINION2,'ru')})},
+   {id:'en2',label:'🇷🇺→🇬🇧',build:()=>({kind:'quiz',items:bTranslate(OPINION2,'en')})},
+   {id:'puz2',label:'🧩 пазл',rule:'Новые реплики. Собери из слов, следи за порядком.',build:()=>({kind:'quiz',items:bPuzzleFrom(OPINION2,'sent')})},
+   {id:'match2',label:'🔗 пары',build:()=>bMatch(OPINION2)},
+   {id:'flash2',label:'🗂 карточки',build:()=>bFlash(OPINION2)},
  ]},
  {id:'compare',ic:'📊',tt:'Сравнения',ts:'comparatives & superlatives',modes:[
    {id:'form',label:'форма',rule:'<b>Сравнительная</b> (два объекта, + <b>than</b>): короткие → <b>-er</b> (old→older, big→bigger), длинные → <b>more</b> … (more expensive). <b>Превосходная</b> (из группы, с <b>the</b>): the <b>-est</b> / the <b>most</b> … Исключения: good→better→the best, bad→worse→the worst, far→further→the furthest.',build:()=>({kind:'quiz',items:bCmpForm()})},
@@ -964,12 +1490,21 @@ const TOPICS=[
    {id:'asas',label:'as…as',rule:'<b>as … as</b> — «такой же…, как» (равенство): <i>as fast as</i>. <b>the same as</b> — «одинаковый с»: <i>the same as mine</i>. <b>than</b> — со сравнительной степенью (-er/more): <i>faster than</i>.',build:()=>({kind:'quiz',items:bCmpAsas()})},
    {id:'judge',label:'верно/нет',rule:'Ищи ошибки: не смешивай <b>more</b> и <b>-er</b> (не «more hotter»). Наречия: <b>more slowly / more carefully</b>. Равенство: <b>as fast as</b> (не «as fast than»). <b>the most</b> для превосходной, не «the more».',build:()=>({kind:'quiz',items:bJudge(CMP_JUDGE)})},
    {id:'puzzle',label:'🧩 пазл',rule:'Порядок слов: <b>[кто] + is + [форма] + than […] / of the three</b>. Напр. <i>Dubai is more expensive than Bangkok.</i>',build:()=>({kind:'quiz',items:bCmpPuzzle()})},
+ ],modes2:[
+   {id:'form2',label:'форма',rule:'Новые предложения. Сравнительная (+than) или превосходная (the -est/most).',build:()=>({kind:'quiz',items:bOptS(CMP_FORM2,'Выбери форму')})},
+   {id:'word2',label:'than/as/the',build:()=>({kind:'quiz',items:bGapS(CMP_ONEWORD2,CMP_ONEWORD_POOL,'Вставь одно слово')})},
+   {id:'judge2',label:'верно/нет',build:()=>({kind:'quiz',items:bJudge(CMP_JUDGE2)})},
+   {id:'puz2',label:'🧩 пазл',build:()=>({kind:'quiz',items:bPuzList(CMP_PUZZLE2)})},
  ]},
  {id:'articles',ic:'🅰️',tt:'Артикли',ts:'a / an / the / —',modes:[
    {id:'gap',label:'вставь артикль',rule:ARTRULE,build:()=>({kind:'quiz',items:bArtGap()})},
    {id:'circle',label:'выбери',rule:ARTRULE,build:()=>({kind:'quiz',items:bArtCircle()})},
    {id:'fix',label:'исправь ошибку',rule:ARTRULE+' Проверь: нужен ли артикль вообще и какой именно.',build:()=>({kind:'quiz',items:bJudge(ART_FIX)})},
    {id:'cloze',label:'📖 текст',rule:ARTRULE,build:()=>({kind:'cloze',passages:ART_CLOZE})},
+ ],modes2:[
+   {id:'gap2',label:'вставь артикль',rule:ARTRULE,build:()=>({kind:'quiz',items:bGapS(ART_GAP2,ART_POOL,'Вставь артикль')})},
+   {id:'circle2',label:'выбери',rule:ARTRULE,build:()=>({kind:'quiz',items:bOptS(ART_CIRCLE2,'Выбери правильное')})},
+   {id:'fix2',label:'исправь ошибку',rule:ARTRULE,build:()=>({kind:'quiz',items:bJudge(ART_FIX2)})},
  ]},
  {id:'preps',ic:'🔤',tt:'Предлоги',ts:'good at, afraid of, depend on…',modes:[
    {id:'flash',label:'🗂 карточки',build:()=>bFlash(PREPS)},
@@ -979,14 +1514,25 @@ const TOPICS=[
    {id:'puzzle',label:'🧩 пазл',build:()=>({kind:'quiz',items:bPrepPuzzle()})},
    {id:'type',label:'⌨️ печать',build:()=>({kind:'quiz',items:bPrepType()})},
    {id:'match',label:'🔗 пары',build:()=>bMatch(PREPS)},
+ ],modes2:[
+   {id:'gap2',label:'предлог',rule:'Новые предложения на те же выражения. Вставь нужный предлог.',build:()=>({kind:'quiz',items:bGapS(PREPS2.map(d=>({s:d.sent,a:d.prep,ru:d.ru})),PREP_POOL2,'Вставь предлог')})},
+   {id:'ru2',label:'🇬🇧→🇷🇺',build:()=>({kind:'quiz',items:bTranslate(PREPS2,'ru')})},
+   {id:'en2',label:'🇷🇺→🇬🇧',build:()=>({kind:'quiz',items:bTranslate(PREPS2,'en')})},
+   {id:'match2',label:'🔗 пары',build:()=>bMatch(PREPS2)},
  ]},
  {id:'pron',ic:'🔊',tt:'Произношение',ts:'/ʃ/ /dʒ/ /tʃ/ и the',modes:[
    {id:'sound',label:'разные звуки',rule:'<b>/tʃ/</b> — church, catch · <b>/dʒ/</b> — jam, bridge · <b>/ʃ/</b> — ship, wash. Слушай начало и конец слова.',build:()=>({kind:'quiz',items:bPronSound()})},
    {id:'pairs',label:'мин. пары',rule:'Минимальные пары: слова различаются одним звуком — <b>/tʃ/</b> (cheap) ↔ <b>/dʒ/</b> (jeep). Нажми 🔊 и выбери, что услышал.',build:()=>({kind:'quiz',items:bMinPair()})},
    {id:'the',label:'чтение the',rule:'<b>the</b> → <b>/ðiː/</b> перед гласным ЗВУКОМ (the apple, the hour), иначе <b>/ðə/</b> (the car, the university).',build:()=>({kind:'quiz',items:bPronThe()})},
+ ],modes2:[
+   {id:'sound2',label:'разные звуки',rule:'Новые слова. Найди слово с другим звуком. Нажми 🔊.',build:()=>({kind:'quiz',items:bSoundList(PRON_SOUND2)})},
+   {id:'pairs2',label:'мин. пары',rule:'Минимальные пары /tʃ/↔/dʒ/, /ʃ/↔/tʃ/. Нажми 🔊 и выбери, что услышал.',build:()=>({kind:'quiz',items:bMinList(MINPAIR2)})},
+   {id:'the2',label:'чтение the',rule:'<b>the</b> → <b>/ðiː/</b> перед гласным ЗВУКОМ, иначе <b>/ðə/</b>. Осторожно: European /ðə/, honest /ðiː/.',build:()=>({kind:'quiz',items:bTheList(PRON_THE2)})},
  ]},
  {id:'audio',ic:'🎧',tt:'Аудио-диктант',ts:'диалог London vs New York',modes:[
    {id:'dict',label:'🎧 диктант',rule:'Слушай предложение (🔊) и записывай целиком. Регистр, точки и апострофы не важны. Можно переслушать.',build:()=>({kind:'quiz',items:bDictation()})},
+ ],modes2:[
+   {id:'dict2',label:'🎧 диктант',rule:'Новые предложения. Слушай 🔊 и записывай целиком.',build:()=>({kind:'quiz',items:bDictList(DIALOGUE2)})},
  ]},
  {id:'phone',ic:'📞',tt:'Телефон',ts:'dial, hang up, voicemail…',modes:[
    {id:'flash',label:'🗂 карточки',build:()=>bFlash(PHONE)},
@@ -995,33 +1541,52 @@ const TOPICS=[
    {id:'type',label:'⌨️ печать',build:()=>({kind:'quiz',items:bTypeWord(PHONE)})},
    {id:'puzzle',label:'🧩 пазл',build:()=>({kind:'quiz',items:bPuzzleFrom(PHONE,'sent')})},
    {id:'match',label:'🔗 пары',build:()=>bMatch(PHONE)},
+ ],modes2:[
+   {id:'gap2',label:'✍️ в предложении',build:()=>({kind:'quiz',items:bPhraseGap(PHONE2,PHONE_POOL2)})},
+   {id:'puz2',label:'🧩 пазл',build:()=>({kind:'quiz',items:bPuzzleFrom(phone2sent(),'en')})},
+   {id:'type2',label:'⌨️ печать',build:()=>({kind:'quiz',items:bTypeWord(PHONE)})},
  ]},
  {id:'obligation',ic:'⚖️',tt:'Have to / must / should',ts:'обязанность и запрет',modes:[
    {id:'choose',label:'выбери форму',rule:'<b>have to / must</b> — надо, обязан (правило/необходимость). <b>don\'t have to</b> — <b>не обязательно</b> (можно и не делать), это НЕ запрет! <b>mustn\'t</b> — <b>нельзя</b>, запрещено. <b>should / shouldn\'t</b> — совет: стоит / не стоит. После must/mustn\'t/should НЕ ставится <b>to</b>.',build:()=>({kind:'quiz',items:bModal4()})},
    {id:'mean',label:'🔗 форма↔значение',build:()=>bMatch(GMEAN4)},
    {id:'judge',label:'верно/нет',rule:'После <b>must / mustn\'t / should</b> нет <b>to</b>: <i>You must go</i>. <b>must</b> не меняется (нет «musts»). Отрицание have to — <b>don\'t have to</b>.',build:()=>({kind:'quiz',items:bJudge(JUDGE4)})},
+ ],modes2:[
+   {id:'choose2',label:'выбери форму',build:()=>({kind:'quiz',items:bChoiceOpt(MODAL2)})},
+   {id:'judge2',label:'верно/нет',build:()=>({kind:'quiz',items:bJudge(JUDGE_OB2)})},
  ]},
  {id:'silent',ic:'🤫',tt:'Тихие согласные',ts:'island, doubt, walk…',modes:[
    {id:'find',label:'немая буква',rule:'В некоторых словах согласная не читается: is<b>l</b>and (немая l→ /ˈaɪlənd/), dou<b>b</b>t, lis<b>t</b>en, wa<b>l</b>k, <b>h</b>our, forei<b>g</b>n, <b>w</b>rong, ca<b>l</b>m.',build:()=>({kind:'quiz',items:bSilent4()})},
+ ],modes2:[
+   {id:'find2',label:'немая буква',rule:'Новые слова: com<b>b</b>, <b>k</b>nee, <b>k</b>nife, <b>h</b>onest, cas<b>t</b>le, ans<b>w</b>er, recei<b>p</b>t, sa<b>l</b>mon, We<b>d</b>nesday.',build:()=>({kind:'quiz',items:bSilentList(SILENT2)})},
  ]},
  {id:'translate4a',ic:'✍️',tt:'Перевод (предлоги)',ts:'RU→EN: interested in, afraid of…',modes:[
    {id:'tr',label:'переведи на англ.',rule:'Используй нужный предлог: interested <b>in</b>, afraid <b>of</b>, proud <b>of</b>, famous <b>for</b>, angry <b>with</b>, tired <b>of</b>, depend <b>on</b>, dream <b>about</b>, good <b>at</b>, keen <b>on</b>, rude <b>to</b>, apologize <b>for</b>. Перевод может отличаться — сравни с образцом.',build:()=>({kind:'quiz',items:bTrans4()})},
+ ],modes2:[
+   {id:'tr2',label:'переведи на англ.',rule:'Новые предложения на те же предлоги. Перевод может отличаться — сравни с образцом.',build:()=>({kind:'quiz',items:bTransList(TRANS4A2)})},
  ]},
  {id:'canable',ic:'✅',tt:'Can / could / be able to',ts:'умение и возможность',modes:[
    {id:'choose',label:'выбери форму',rule:'<b>can/can\'t</b> — способность сейчас. <b>could/couldn\'t</b> — общая способность в прошлом. <b>was/were able to</b> — сумел в конкретной ситуации (успех в один момент — НЕ could). <b>be able to</b> — там, где у can нет формы: после другого глагола (need to <b>be able to</b>), после модального (must/will <b>be able to</b>), в перфекте (have <b>been able to</b>), после <b>used to be able to</b>, после not / с -ing.',build:()=>({kind:'quiz',items:bChoiceSent(CAN4B)})},
+ ],modes2:[
+   {id:'choose2',label:'выбери форму',rule:'Различай <b>could</b> (общая способность в прошлом) и <b>was/were able to</b> (сумел в конкретный момент).',build:()=>({kind:'quiz',items:bChoiceSent(CAN2)})},
  ]},
  {id:'reflexive',ic:'🪞',tt:'Reflexive pronouns',ts:'myself, yourself, itself…',modes:[
    {id:'choose',label:'выбери',rule:'<b>Возвратные местоимения</b> = «сам себя»: I→<b>myself</b>, you→<b>yourself</b>, he→<b>himself</b>, she→<b>herself</b>, it→<b>itself</b>, we→<b>ourselves</b>, you (мн.)→<b>yourselves</b>, they→<b>themselves</b>. <i>enjoy yourself, hurt himself, it switches itself off</i>.',build:()=>({kind:'quiz',items:bChoiceSent(REFL_Q)})},
    {id:'match',label:'🔗 пары',build:()=>bMatch(REFL)},
+ ],modes2:[
+   {id:'choose2',label:'выбери',build:()=>({kind:'quiz',items:bChoiceSent(REFL2)})},
  ]},
  {id:'eding',ic:'😴',tt:'-ed / -ing прилагательные',ts:'bored / boring…',modes:[
    {id:'choose',label:'выбери форму',rule:'<b>-ed</b> — что Я ЧУВСТВУЮ: <i>I\'m bored</i> (мне скучно). <b>-ing</b> — СВОЙСТВО, что вызывает чувство: <i>The film is boring</i> (скучный). Люди чаще -ed, вещи/события чаще -ing.',build:()=>({kind:'quiz',items:bChoiceSent(EDING)})},
    {id:'ru',label:'🇬🇧→🇷🇺',build:()=>({kind:'quiz',items:bTranslate(EDWORDS,'ru')})},
    {id:'match',label:'🔗 пары',build:()=>bMatch(EDWORDS)},
    {id:'flash',label:'🗂 карточки',build:()=>bFlash(EDWORDS)},
+ ],modes2:[
+   {id:'choose2',label:'выбери форму',build:()=>({kind:'quiz',items:bChoiceOpt(EDING2)})},
  ]},
  {id:'translate4b',ic:'✍️',tt:'Перевод 4B',ts:'RU→EN: can, reflexive, -ed/-ing',modes:[
    {id:'tr',label:'переведи на англ.',rule:'Грамматика 4B: can / was able to / been able to, возвратные (enjoyed ourselves), -ed/-ing (boring). Перевод может отличаться — сравни с образцом.',build:()=>({kind:'quiz',items:bTransList(TRANS4B)})},
+ ],modes2:[
+   {id:'tr2',label:'переведи на англ.',rule:'Новые предложения на грамматику 4B. Перевод может отличаться — сравни с образцом.',build:()=>({kind:'quiz',items:bTransList(TRANS4B2)})},
  ]},
  {id:'hw3',ic:'📝',tt:'Домашка · стр. 24–25',ts:'Practical English + Can you remember 1–3',modes:[
    {id:'gram',label:'грамматика',build:()=>({kind:'quiz',items:bChoiceOpt(HW3_GRAM)})},
@@ -1029,6 +1594,12 @@ const TOPICS=[
    {id:'pron',label:'произношение',build:()=>({kind:'quiz',items:bOddSound(HW3_PRON)})},
    {id:'jobs',label:'статья (a/b/c)',rule:'Прочитай предложения из статьи «Jobs for women» и выбери правильную форму.',build:()=>({kind:'quiz',items:bChoiceOpt(HW3_JOBS)})},
    {id:'soc',label:'Social English',build:()=>({kind:'quiz',items:bPhraseGap(HW3_SOC,HW3_SOC_POOL)})},
+ ],modes2:[
+   {id:'gram2',label:'грамматика',build:()=>({kind:'quiz',items:bChoiceOpt(HW3_GRAM2)})},
+   {id:'voc2',label:'лишнее слово',build:()=>({kind:'quiz',items:bOdd(HW3_VOC2)})},
+   {id:'pron2',label:'произношение',build:()=>({kind:'quiz',items:bOddSound(HW3_PRON2)})},
+   {id:'jobs2',label:'статья (a/b/c)',rule:'Новые предложения. Выбери правильную форму.',build:()=>({kind:'quiz',items:bChoiceOpt(HW3_JOBS2)})},
+   {id:'soc2',label:'Social English',build:()=>({kind:'quiz',items:bPhraseGap(HW3_SOC2,HW3_SOC_POOL2)})},
  ]},
  {id:'hw4a',ic:'📝',tt:'Домашка · стр. 26–28',ts:'телефон, obligation, тихие согласные',modes:[
    {id:'def',label:'слово по определению',build:()=>({kind:'quiz',items:bPick(HW4A_DEF,HW4A_DEF_POOL,'Какое это слово?')})},
@@ -1036,11 +1607,21 @@ const TOPICS=[
    {id:'modal',label:'must/should',build:()=>({kind:'quiz',items:bChoiceOpt(HW4A_MODAL)})},
    {id:'fix',label:'исправь ошибку',rule:'После must/mustn\'t/should нет <b>to</b>; прошедшее от have to — <b>had to</b>; отрицание — <b>didn\'t have to</b>.',build:()=>({kind:'quiz',items:bJudge(HW4A_FIX)})},
    {id:'silent',label:'немые согласные',build:()=>({kind:'quiz',items:bSilentList(HW4A_SILENT)})},
+ ],modes2:[
+   {id:'def2',label:'слово по определению',build:()=>({kind:'quiz',items:bPick(HW4A_DEF2,HW4A_DEF_POOL2,'Какое это слово?')})},
+   {id:'ny2',label:'have to / mustn\'t',rule:'<b>mustn\'t</b> — нельзя (запрет). <b>don\'t have to</b> — не обязательно.',build:()=>({kind:'quiz',items:bChoiceOpt(HW4A_NY2)})},
+   {id:'modal2',label:'must/should',build:()=>({kind:'quiz',items:bChoiceOpt(HW4A_MODAL2)})},
+   {id:'fix2',label:'исправь ошибку',rule:'После must/mustn\'t/should нет <b>to</b>; прошедшее от have to — <b>had to</b>; отрицание — <b>didn\'t have to</b>.',build:()=>({kind:'quiz',items:bJudge(HW4A_FIX2)})},
+   {id:'silent2',label:'немые согласные',build:()=>({kind:'quiz',items:bSilentList(HW4A_SILENT2)})},
  ]},
  {id:'hw4b',ic:'📝',tt:'Домашка · стр. 29–31',ts:'can/could, -ed/-ing, reflexive',modes:[
    {id:'can',label:'can/be able to',rule:'Где у can нет формы — ставим <b>be able to</b> (после другого глагола, must/will, в перфекте, после used to, с -ing).',build:()=>({kind:'quiz',items:bChoiceOpt(HW4B_CAN)})},
    {id:'eding',label:'-ed / -ing',build:()=>({kind:'quiz',items:bChoiceOpt(HW4B_EDING)})},
    {id:'refl',label:'reflexive',build:()=>({kind:'quiz',items:bChoiceOpt(HW4B_REFL)})},
+ ],modes2:[
+   {id:'can2',label:'can/be able to',rule:'Где у can нет формы — <b>be able to</b>. <b>was/were able to</b> — сумел в конкретной ситуации.',build:()=>({kind:'quiz',items:bChoiceOpt(HW4B_CAN2)})},
+   {id:'eding2',label:'-ed / -ing',build:()=>({kind:'quiz',items:bChoiceOpt(HW4B_EDING2)})},
+   {id:'refl2',label:'reflexive',build:()=>({kind:'quiz',items:bChoiceOpt(HW4B_REFL2)})},
  ]},
 ];
 
@@ -1099,6 +1680,7 @@ function openReview(){const pool=reviewPool();if(!pool.length)return;
  home.hidden=true;topicEl.hidden=false;
  document.getElementById('ttl').textContent='🔁 Повторение';
  document.getElementById('tabs').innerHTML='';
+ document.getElementById('levelbar').style.display='none';
  document.getElementById('ruleWrap').innerHTML='';
  mode={build:()=>({kind:'quiz',items:bTranslate(shuffle(pool).slice(0,12),'ru')})};
  start();
@@ -1152,13 +1734,22 @@ function openUnit(u){navUnit=u;
   group('📚 Слова и грамматика',u.ids);
   group('📝 Домашняя работа',u.hw);
 }
+function setModes(list){
+  const tabs=document.getElementById('tabs'); tabs.innerHTML='';
+  list.forEach((m,i)=>{const b=document.createElement('button');b.className='tab'+(i===0?' on':'');b.textContent=m.label;
+    b.onclick=()=>{[...tabs.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=m;start();};tabs.appendChild(b);});
+  mode=list[0]; start();
+}
 function openTopic(t){
   topic=t; home.hidden=true; topicEl.hidden=false;
   document.getElementById('ttl').textContent=t.tt;
-  const tabs=document.getElementById('tabs'); tabs.innerHTML='';
-  t.modes.forEach((m,i)=>{const b=document.createElement('button');b.className='tab'+(i===0?' on':'');b.textContent=m.label;
-    b.onclick=()=>{[...tabs.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=m;start();};tabs.appendChild(b);});
-  mode=t.modes[0]; start();
+  const lb=document.getElementById('levelbar');
+  if(t.modes2&&t.modes2.length){lb.style.display='';
+    lb.innerHTML='<div class="lvlbar"><button class="lvlbtn on" id="lv1">Ур. 1</button><button class="lvlbtn" id="lv2">Ур. 2</button></div>';
+    document.getElementById('lv1').onclick=function(){this.classList.add('on');document.getElementById('lv2').classList.remove('on');setModes(t.modes);};
+    document.getElementById('lv2').onclick=function(){this.classList.add('on');document.getElementById('lv1').classList.remove('on');setModes(t.modes2);};
+  } else {lb.style.display='none';lb.innerHTML='';}
+  setModes(t.modes);
 }
 document.getElementById('back').onclick=()=>{topicEl.hidden=true;home.hidden=false;speechSynthesis.cancel();if(navUnit)openUnit(navUnit);else renderHome();};
 document.getElementById('restart').onclick=()=>start();
