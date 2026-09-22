@@ -1,0 +1,16 @@
+{
+  "name": "English File · Тренажёр",
+  "short_name": "English File",
+  "description": "Тренажёр по English File: Files 3–4 (лексика, грамматика, произношение).",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f2ee",
+  "theme_color": "#3a6ea5",
+  "lang": "ru",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
