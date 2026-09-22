@@ -121,13 +121,28 @@
   .tcard .pbar{height:5px;border-radius:4px;background:var(--chip);overflow:hidden;margin-top:9px}
   .tcard .pbar>i{display:block;height:100%;width:0;background:var(--accent);border-radius:4px}
   .install{background:var(--note-bg,#fdf3e0);border:1px solid var(--note-line,#f0d9a8);color:var(--note,#8a5a00);border-radius:12px;padding:10px 13px;font-size:13px;line-height:1.5;margin-bottom:14px}
+  .navrow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:11px;cursor:pointer;font-family:inherit;box-shadow:0 1px 2px rgba(0,0,0,.03);transition:.12s}
+  .navrow:active{transform:scale(.99)}
+  .navrow:hover{border-color:var(--accent)}
+  .navrow .nric{font-size:28px;flex:0 0 auto;width:40px;text-align:center}
+  .navrow .nrt{flex:1;display:flex;flex-direction:column;min-width:0}
+  .navrow .nrt b{font-size:16.5px;color:var(--ink)}
+  .navrow .nrt span{font-size:12.5px;color:var(--muted);line-height:1.35;margin-top:2px}
+  .navrow .nrp{font-size:13px;font-weight:800;color:var(--accent);flex:0 0 auto}
+  .navrow .nrar{font-size:24px;color:var(--muted);flex:0 0 auto;line-height:1}
+  .navrow.grp{background:transparent;border:none;box-shadow:none;cursor:default;padding:6px 2px 2px;margin-bottom:6px;margin-top:6px}
+  .navrow.grp .nrt b{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--accent)}
+  #homeBack{flex:0 0 auto}
 </style>
 
 <div class="wrap">
   <div id="home">
     <div class="apphead">
-      <div><h1>English File</h1><p class="sub" style="margin:2px 0 0">Мини-курс: Files 3–4 · выбери урок</p></div>
-      <button class="mini" id="openSetHome">🔊 Голос</button>
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
+        <button class="back" id="homeBack" style="display:none">‹</button>
+        <div style="min-width:0"><h1 id="homeTitle">English File</h1><p class="sub" id="homeSub" style="margin:2px 0 0">Мини-курс: Files 3–4 · выбери раздел</p></div>
+      </div>
+      <button class="mini" id="openSetHome" style="flex:0 0 auto">🔊 Голос</button>
     </div>
     <div class="statsrow" id="statsrow"></div>
     <div id="installTip" class="install" style="display:none">📲 Чтобы установить как приложение: в Safari нажми «Поделиться» → <b>«На экран “Домой”»</b>. Появится иконка, работает офлайн.</div>
@@ -736,6 +751,152 @@ const TRANS4B=[
  {ru:"Она хорошо подготовилась к собеседованию.",model:"She prepared herself well for the interview.",acc:["she prepared herself well for the interview","she prepared well for the interview"]},
 ];
 
+/* ================= ДОМАШНЯЯ РАБОТА (рабочая тетрадь) ================= */
+function bChoiceOpt(list){return shuffle(list).map(d=>({t:'choice',lab:d.lab||'Выбери правильное',
+  promptHTML:d.a+'<span class="gap"></span>'+d.b,hint:d.hint||'',speak:(d.a+d.ans+d.b).replace(/A:|B:/g,''),
+  options:shuffle(d.o.slice()),correct:d.ans,grid:(d.o.length===2)}));}
+function bPhraseGap(list,pool){return shuffle(list).map(d=>({t:'choice',lab:'Вставь фразу',
+  promptHTML:d.a+'<span class="gap"></span>'+d.b,speak:(d.a+d.ans+d.b).replace(/A:|B:/g,''),
+  options:shuffle(pool.slice()),correct:d.ans}));}
+function bPick(list,pool,lab){return shuffle(list).map(d=>({t:'choice',lab:lab||'Выбери слово',
+  promptHTML:d.d,speak:d.w,noGloss:true,options:shuffle([d.w,...distract(pool,d.w,3)]),correct:d.w}));}
+function bOdd(list){return shuffle(list).map(d=>({t:'choice',lab:'Лишнее слово',grid:true,
+  promptHTML:'Найди лишнее слово',speak:d.w.join(', '),noGloss:true,options:shuffle(d.w.slice()),correct:d.odd,after:d.why}));}
+function bOddSound(list){return shuffle(list).map(d=>({t:'choice',lab:'Другой звук',grid:true,
+  promptHTML:'🔊 '+d.s+' — найди лишнее',speak:d.w.join(', '),noGloss:true,options:shuffle(d.w.slice()),correct:d.odd,after:d.why}));}
+function bSilentList(list){return shuffle(list).map(d=>({t:'choice',lab:'Немая буква',grid:true,
+  promptHTML:d.w,speak:d.w,noGloss:true,options:shuffle(d.o.slice()),correct:d.ans,after:d.note}));}
+
+/* --- File 3 · Домашка (стр. 24–25) --- */
+const HW3_GRAM=[
+ {a:"I ",ans:"don't",b:" need a new car at the moment. My old car works perfectly.",o:["don't","didn't","doesn't","not"]},
+ {a:"That case looks heavy. ",ans:"Shall",b:" I get a trolley for you?",o:["Shall","Will","Do","Am"]},
+ {a:"No, I don't want to go for a walk. I've ",ans:"just",b:" come home from work!",o:["just","yet","already","ever"]},
+ {a:"I've been learning English ",ans:"for",b:" three years.",o:["for","since","during","ago"]},
+ {a:"Your cooking is ",ans:"better",b:" than mine — this tuna is delicious!",o:["better","best","gooder","more good"]},
+ {a:"My sister's studying medicine. She wants to be ",ans:"a",b:" doctor.",o:["a","an","the","—"]},
+];
+const HW3_VOC=[
+ {w:["beetroot","cabbage","grapes","green beans"],odd:"grapes",why:"grapes — фрукт, остальные овощи."},
+ {w:["charming","mature","sociable","spoilt"],odd:"spoilt",why:"spoilt — отрицательное, остальные положительные."},
+ {w:["borrow","loan","owe","save"],odd:"save",why:"save (копить) — остальные про долг."},
+ {w:["angry","furious","starving","terrified"],odd:"angry",why:"angry — обычное, остальные «сильные»."},
+ {w:["ferry","lorry","motorbike","van"],odd:"ferry",why:"ferry — водный транспорт."},
+ {w:["fond of","fed up with","keen on","pleased with"],odd:"fed up with",why:"fed up with — отрицательное."},
+];
+const HW3_PRON=[
+ {s:"up /ʌ/",w:["done","gone","money","nothing"],odd:"gone",why:"gone /ɒ/, остальные /ʌ/."},
+ {s:"clock /ɒ/",w:["fond","lorry","watch","worry"],odd:"worry",why:"worry /ʌ/, остальные /ɒ/."},
+ {s:"phone /əʊ/",w:["cost","note","owe","roast"],odd:"cost",why:"cost /ɒ/, остальные /əʊ/."},
+ {s:"shower /ʃ/",w:["adventure","ambitious","crash","sociable"],odd:"adventure",why:"adventure /tʃ/, остальные /ʃ/."},
+ {s:"chess /tʃ/",w:["catch","charming","coach","machine"],odd:"machine",why:"machine /ʃ/, остальные /tʃ/."},
+];
+const HW3_JOBS=[
+ {a:"She ",ans:"has been driving",b:" a train for eight years now.",o:["drives","is driving","has been driving"]},
+ {a:"The situation has changed a lot ",ans:"since",b:" 1978.",o:["for","from","since"]},
+ {a:"The male drivers were not very kind ",ans:"to",b:" women.",o:["at","to","with"]},
+ {a:"Today the job is ",ans:"easier",b:" for women than in the past.",o:["easier","easiest","more easy"]},
+ {a:"One of ",ans:"the best",b:" things about it is the salary.",o:["better","best","the best"]},
+ {a:"Georgiana ",ans:"has been",b:" a train driver for a year.",o:["has been","is","was"]},
+ {a:"She ",ans:"earns",b:" £55,000 a year.",o:["costs","earns","wins"]},
+ {a:"She's been able to get a ",ans:"mortgage",b:" to buy her own house.",o:["bargain","budget","mortgage"]},
+ {a:"She can easily ",ans:"afford",b:" childcare for her children.",o:["afford","charge","raise"]},
+ {a:"There is nothing about being ",ans:"a train driver",b:" that makes it a man's job.",o:["train driver","a train driver","the train driver"]},
+];
+const HW3_SOC_POOL=["That's so kind of you","You've come back","Did you mean what you said","It's just that","Hang on a minute"];
+const HW3_SOC=[
+ {a:"A: I brought you some flowers. B: Thank you. ",ans:"That's so kind of you",b:"."},
+ {a:"A: ",ans:"You've come back",b:"? B: Yes, I forgot my phone."},
+ {a:"A: ",ans:"Did you mean what you said",b:" about moving abroad? B: No, I was joking."},
+ {a:"A: What's the matter? B: Nothing. ",ans:"It's just that",b:" my boyfriend's away and I miss him."},
+ {a:"A: Want to come for a walk? B: ",ans:"Hang on a minute",b:". I'll get my coat."},
+];
+
+/* --- File 4A · Домашка (стр. 26–28) --- */
+const HW4A_DEF=[
+ {w:"text / message",d:"to send sb a message using a mobile phone"},
+ {w:"put sb on hold",d:"to make a caller wait until the person is free"},
+ {w:"call back",d:"to phone sb again, or phone sb who called you"},
+ {w:"go off",d:"to start ringing"},
+ {w:"leave a message",d:"to record information for sb to listen to later"},
+ {w:"voicemail",d:"a system that stores messages to listen to later"},
+ {w:"cut sb off",d:"to stop or interrupt sb's phone conversation"},
+ {w:"dial",d:"to push the buttons on a phone to call a number"},
+ {w:"ringtone",d:"the sound your phone makes when sb is calling you"},
+ {w:"swipe",d:"to move content across a screen with your finger"},
+ {w:"engaged / busy",d:"a phone is in use and can't be called"},
+ {w:"hang up",d:"to end a phone conversation and put the phone down"},
+];
+const HW4A_DEF_POOL=HW4A_DEF.map(x=>x.w);
+const HW4A_NY=[
+ {a:"You ",ans:"mustn't",b:" drive on the left — here we drive on the right.",o:["mustn't","don't have to"],hint:"нельзя (запрет)"},
+ {a:"You ",ans:"don't have to",b:" pay to visit most museums — entrance is free.",o:["mustn't","don't have to"],hint:"не обязательно"},
+ {a:"You ",ans:"mustn't",b:" smoke in any public building. It is prohibited by law.",o:["mustn't","don't have to"],hint:"нельзя"},
+ {a:"You ",ans:"don't have to",b:" go everywhere by subway — you can take the bus.",o:["mustn't","don't have to"],hint:"не обязательно"},
+];
+const HW4A_MODAL=[
+ {a:"Adam ",ans:"must",b:" pass all his exams or he won't go to university.",o:["must","mustn't","should","shouldn't"]},
+ {a:"I think you ",ans:"should",b:" buy the blue dress, not the red one.",o:["must","mustn't","should","shouldn't"]},
+ {a:"You ",ans:"mustn't",b:" take phones into the exam room.",o:["must","mustn't","should","shouldn't"]},
+ {a:"You ",ans:"shouldn't",b:" eat so many sweets. They aren't good for you.",o:["must","mustn't","should","shouldn't"]},
+ {a:"You ",ans:"must",b:" be quiet when you're in the library.",o:["must","mustn't","should","shouldn't"]},
+ {a:"I know I ",ans:"shouldn't",b:" go out tonight, but I want to go to the concert.",o:["must","mustn't","should","shouldn't"]},
+ {a:"I ",ans:"mustn't",b:" forget to call my sister back.",o:["must","mustn't","should","shouldn't"]},
+];
+const HW4A_FIX=[
+ {s:"You <b>mustn't</b> read text messages when you're talking to somebody.",ok:false,fix:"You shouldn't read (это совет, не запрет)"},
+ {s:"<b>Do you have to</b> wear a suit and tie at work?",ok:true},
+ {s:"I <b>must</b> go to work by bus yesterday.",ok:false,fix:"I had to go (прошедшее время)"},
+ {s:"You don't look well. <b>You should</b> go home.",ok:true},
+ {s:"You <b>don't have to</b> park here. It says 'no parking'.",ok:false,fix:"You mustn't park (запрещено)"},
+ {s:"My father is a nurse and <b>he often should</b> work nights.",ok:false,fix:"he often has to work"},
+ {s:"Perhaps everyone <b>will have to</b> speak English and Chinese.",ok:true},
+ {s:"I <b>mustn't</b> cook last night because we went out.",ok:false,fix:"I didn't have to cook (прошедшее)"},
+];
+const HW4A_SILENT=[
+ {w:"mustn't",o:["t","s","m","n"],ans:"t",note:"mus(t)n't — t не читается"},
+ {w:"shouldn't",o:["l","s","d","h"],ans:"l",note:"shou(l)dn't — l не читается"},
+ {w:"lights",o:["gh","l","t","s"],ans:"gh",note:"li(gh)ts — gh не читается"},
+ {w:"hour",o:["h","o","u","r"],ans:"h",note:"(h)our — h не читается"},
+ {w:"exhausted",o:["h","x","s","d"],ans:"h",note:"ex(h)austed — h не читается"},
+ {w:"debt",o:["b","d","t","e"],ans:"b",note:"de(b)t — b не читается"},
+ {w:"mortgage",o:["t","g","m","r"],ans:"t",note:"mor(t)gage — t не читается"},
+ {w:"foreign",o:["g","f","r","n"],ans:"g",note:"forei(g)n — g не читается"},
+ {w:"wrong",o:["w","r","n","g"],ans:"w",note:"(w)rong — w не читается"},
+ {w:"island",o:["s","i","l","d"],ans:"s",note:"i(s)land — s не читается"},
+];
+
+/* --- File 4B · Домашка (стр. 29–31) --- */
+const HW4B_CAN=[
+ {a:"You need to ",ans:"be able to",b:" drive to live in the country.",o:["can","be able to"]},
+ {a:"Sorry, I ",ans:"haven't been able to",b:" call until now.",o:["haven't could","haven't been able to"]},
+ {a:"I've never ",ans:"been able to",b:" dance well, but I'd love to learn.",o:["could","been able to"]},
+ {a:"I used to ",ans:"be able to",b:" speak a bit of Polish.",o:["can","be able to"]},
+ {a:"To work for this company, you must ",ans:"be able to",b:" speak three languages.",o:["can","be able to"]},
+ {a:"I hate not ",ans:"being able to",b:" communicate with local people.",o:["being able to","can"]},
+];
+const HW4B_EDING=[
+ {a:"My sister can't swim. She's ",ans:"frightened",b:" of the water.",o:["frightened","frightening"]},
+ {a:"Looking after small children can be very ",ans:"tiring",b:". They have a lot of energy.",o:["tired","tiring"]},
+ {a:"I was very ",ans:"embarrassed",b:" when my phone rang in the meeting.",o:["embarrassed","embarrassing"]},
+ {a:"His exam results were very ",ans:"disappointing",b:". He failed every subject.",o:["disappointed","disappointing"]},
+ {a:"I'm really ",ans:"excited",b:" about going to Italy.",o:["excited","exciting"]},
+ {a:"This programme is really ",ans:"boring",b:". Can we watch something else?",o:["bored","boring"]},
+ {a:"I always feel ",ans:"depressed",b:" at the end of a holiday.",o:["depressed","depressing"]},
+ {a:"In the end she got ",ans:"frustrated",b:" and gave up.",o:["frustrated","frustrating"]},
+ {a:"We took lots of photos because the view was so ",ans:"amazing",b:".",o:["amazed","amazing"]},
+ {a:"I'm really ",ans:"annoyed",b:" with my brother — he forgot my birthday!",o:["annoyed","annoying"]},
+];
+const HW4B_REFL=[
+ {a:"Thanks for inviting me. I really enjoyed ",ans:"myself",b:" at the concert.",o:["myself","yourself","himself","itself"]},
+ {a:"She got the job because she'd prepared ",ans:"herself",b:" well for the interview.",o:["herself","himself","themselves","yourself"]},
+ {a:"Have a great time! You'll enjoy ",ans:"yourselves",b:" at the party.",o:["yourselves","yourself","ourselves","themselves"]},
+ {a:"My new printer switches ",ans:"itself",b:" off when it isn't used.",o:["itself","himself","themselves","yourself"]},
+ {a:"We kept ",ans:"ourselves",b:" awake by listening to music.",o:["ourselves","yourselves","themselves","myself"]},
+ {a:"He fell down the stairs, but he didn't hurt ",ans:"himself",b:" badly.",o:["himself","herself","yourself","itself"]},
+ {a:"They've been saving to buy ",ans:"themselves",b:" a house.",o:["themselves","ourselves","yourselves","itself"]},
+];
+
 /* ================= TOPICS ================= */
 const ARTRULE='<b>a / an</b> — исчисляемое ед. числа, впервые или «один из многих»; выбор по <b>звуку</b>: a car, an egg, an hour, an engineer. <b>the</b> — конкретный / известный / единственный предмет, второе упоминание, а также с превосходной степенью (the best). <b>—</b> (без артикля) — мн. число и неисчисляемое в общем смысле (cats, money), названия спорта и приёмов пищи (football, breakfast), устойчивые <i>go to work / school</i>, <i>next week</i>.';
 const TOPICS=[
@@ -855,6 +1016,25 @@ const TOPICS=[
  {id:'translate4b',ic:'✍️',tt:'Перевод 4B',ts:'RU→EN: can, reflexive, -ed/-ing',modes:[
    {id:'tr',label:'переведи на англ.',rule:'Грамматика 4B: can / was able to / been able to, возвратные (enjoyed ourselves), -ed/-ing (boring). Перевод может отличаться — сравни с образцом.',build:()=>({kind:'quiz',items:bTransList(TRANS4B)})},
  ]},
+ {id:'hw3',ic:'📝',tt:'Домашка · стр. 24–25',ts:'Practical English + Can you remember 1–3',modes:[
+   {id:'gram',label:'грамматика',build:()=>({kind:'quiz',items:bChoiceOpt(HW3_GRAM)})},
+   {id:'voc',label:'лишнее слово',build:()=>({kind:'quiz',items:bOdd(HW3_VOC)})},
+   {id:'pron',label:'произношение',build:()=>({kind:'quiz',items:bOddSound(HW3_PRON)})},
+   {id:'jobs',label:'статья (a/b/c)',rule:'Прочитай предложения из статьи «Jobs for women» и выбери правильную форму.',build:()=>({kind:'quiz',items:bChoiceOpt(HW3_JOBS)})},
+   {id:'soc',label:'Social English',build:()=>({kind:'quiz',items:bPhraseGap(HW3_SOC,HW3_SOC_POOL)})},
+ ]},
+ {id:'hw4a',ic:'📝',tt:'Домашка · стр. 26–28',ts:'телефон, obligation, тихие согласные',modes:[
+   {id:'def',label:'слово по определению',build:()=>({kind:'quiz',items:bPick(HW4A_DEF,HW4A_DEF_POOL,'Какое это слово?')})},
+   {id:'ny',label:'have to / mustn\'t',rule:'<b>mustn\'t</b> — нельзя (запрет). <b>don\'t have to</b> — не обязательно (можно и не делать).',build:()=>({kind:'quiz',items:bChoiceOpt(HW4A_NY)})},
+   {id:'modal',label:'must/should',build:()=>({kind:'quiz',items:bChoiceOpt(HW4A_MODAL)})},
+   {id:'fix',label:'исправь ошибку',rule:'После must/mustn\'t/should нет <b>to</b>; прошедшее от have to — <b>had to</b>; отрицание — <b>didn\'t have to</b>.',build:()=>({kind:'quiz',items:bJudge(HW4A_FIX)})},
+   {id:'silent',label:'немые согласные',build:()=>({kind:'quiz',items:bSilentList(HW4A_SILENT)})},
+ ]},
+ {id:'hw4b',ic:'📝',tt:'Домашка · стр. 29–31',ts:'can/could, -ed/-ing, reflexive',modes:[
+   {id:'can',label:'can/be able to',rule:'Где у can нет формы — ставим <b>be able to</b> (после другого глагола, must/will, в перфекте, после used to, с -ing).',build:()=>({kind:'quiz',items:bChoiceOpt(HW4B_CAN)})},
+   {id:'eding',label:'-ed / -ing',build:()=>({kind:'quiz',items:bChoiceOpt(HW4B_EDING)})},
+   {id:'refl',label:'reflexive',build:()=>({kind:'quiz',items:bChoiceOpt(HW4B_REFL)})},
+ ]},
 ];
 
 /* ================= engine ================= */
@@ -863,33 +1043,63 @@ const stage=document.getElementById('stage'),elR=document.getElementById('right'
 let topic=null,mode=null,deck=[],idx=0,right=0,wrong=0,answered=false,missed=[];
 let clozePassages=[],clozeIdx=0,flashItems=[],flashIdx=0,flashRepeat=[];
 
-const UNITS=[
- {t:'📗 File 3 · Units 3A–3B',ids:['transport','compound','phrasal','strong','raceword','u3b','opinion','compare','articles','preps','pron','audio']},
- {t:'📘 File 4 · 4A «Bad manners?»',ids:['phone','obligation','silent','translate4a']},
- {t:'📘 File 4 · 4B «Yes, I can!»',ids:['canable','reflexive','eding','translate4b']},
+const COURSE=[
+ {id:'f3',ic:'📗',t:'File 3',sub:'Units 3A–3B · слова, грамматика',units:[
+   {id:'u3ab',ic:'📗',t:'Units 3A–3B',sub:'транспорт, сравнения, артикли, предлоги…',ids:['transport','compound','phrasal','strong','raceword','u3b','opinion','compare','articles','preps','pron','audio'],hw:['hw3']},
+ ]},
+ {id:'f4',ic:'📘',t:'File 4',sub:'Units 4A–4B · слова, грамматика',units:[
+   {id:'u4a',ic:'📞',t:'4A «Bad manners?»',sub:'телефон, have to/must, тихие согласные, перевод',ids:['phone','obligation','silent','translate4a'],hw:['hw4a']},
+   {id:'u4b',ic:'✅',t:'4B «Yes, I can!»',sub:'can/could/be able to, reflexive, -ed/-ing, перевод',ids:['canable','reflexive','eding','translate4b'],hw:['hw4b']},
+ ]},
 ];
 function byId(id){return TOPICS.find(t=>t.id===id);}
-function renderHome(){
+function avgProg(ids){const p=getProg();const v=ids.map(id=>p[id]||0);return Math.round(v.reduce((a,b)=>a+b,0)/(ids.length||1));}
+function fileIds(f){return f.units.reduce((a,u)=>a.concat(u.ids),[]);}
+let navFile=null,navUnit=null;
+function setHead(title,sub,showBack){document.getElementById('homeTitle').textContent=title;
+  document.getElementById('homeSub').textContent=sub;
+  document.getElementById('homeBack').style.display=showBack?'':'none';}
+function navrow(ic,title,sub,pct,onclick){const r=document.createElement('button');r.className='navrow';
+  r.innerHTML=`<span class="nric">${ic}</span><span class="nrt"><b>${title}</b><span>${sub}</span></span><span class="nrp">${pct}%</span><span class="nrar">›</span>`;
+  r.onclick=onclick;return r;}
+function renderHome(){navFile=null;navUnit=null;renderFiles();}
+function renderFiles(){
   const prog=getProg();const s=getStreak();
   const vals=TOPICS.map(t=>prog[t.id]||0);
   const doneCount=vals.filter(v=>v>=80).length;
   const overall=Math.round(vals.reduce((a,b)=>a+b,0)/TOPICS.length);
-  const sr=document.getElementById('statsrow');
+  setHead('English File','Мини-курс: Files 3–4 · выбери раздел',false);
+  const sr=document.getElementById('statsrow');sr.style.display='';
   sr.innerHTML=`<div class="stat-c"><div class="v">🔥 ${s.count||0}</div><div class="l">дней подряд</div></div>
     <div class="stat-c"><div class="v">${overall}%</div><div class="l">общий прогресс</div></div>
     <div class="stat-c"><div class="v">${doneCount}/${TOPICS.length}</div><div class="l">уроков пройдено</div></div>`;
   const box=document.getElementById('units');box.innerHTML='';
-  UNITS.forEach(u=>{
-    const uv=u.ids.map(id=>prog[id]||0);const up=Math.round(uv.reduce((a,b)=>a+b,0)/u.ids.length);
-    const hd=document.createElement('div');hd.className='unithd';hd.innerHTML=`${u.t}<span class="up">${up}%</span>`;box.appendChild(hd);
+  COURSE.forEach(f=>box.appendChild(navrow(f.ic,f.t,f.sub,avgProg(fileIds(f)),()=>openFile(f))));
+}
+function openFile(f){navFile=f;navUnit=null;
+  setHead(f.t,'Выбери юнит',true);
+  document.getElementById('statsrow').style.display='none';
+  document.getElementById('homeBack').onclick=renderFiles;
+  const box=document.getElementById('units');box.innerHTML='';
+  f.units.forEach(u=>box.appendChild(navrow(u.ic,u.t,u.sub,avgProg(u.ids),()=>openUnit(u))));
+}
+function openUnit(u){navUnit=u;
+  setHead(u.t,'Выбери урок',true);
+  document.getElementById('statsrow').style.display='none';
+  document.getElementById('homeBack').onclick=()=>{if(navFile)openFile(navFile);else renderFiles();};
+  const prog=getProg();
+  const box=document.getElementById('units');box.innerHTML='';
+  function group(title,ids){if(!ids||!ids.length)return;
+    const hd=document.createElement('div');hd.className='navrow grp';hd.innerHTML=`<span class="nrt"><b>${title}</b></span>`;box.appendChild(hd);
     const grid=document.createElement('div');grid.className='cards';box.appendChild(grid);
-    u.ids.forEach(id=>{const t=byId(id);if(!t)return;const pv=prog[id]||0;
+    ids.forEach(id=>{const t=byId(id);if(!t)return;const pv=prog[id]||0;
       const d=document.createElement('button');d.className='tcard';
       d.innerHTML=`<span class="pbadge${pv>=80?' done':''}">${pv?pv+'%':'—'}</span>
         <div class="ic">${t.ic}</div><div class="tt">${t.tt}</div><div class="ts">${t.ts}</div>
         <div class="pbar"><i style="width:${pv}%"></i></div>`;
-      d.onclick=()=>openTopic(t);grid.appendChild(d);});
-  });
+      d.onclick=()=>openTopic(t);grid.appendChild(d);});}
+  group('📚 Слова и грамматика',u.ids);
+  group('📝 Домашняя работа',u.hw);
 }
 function openTopic(t){
   topic=t; home.hidden=true; topicEl.hidden=false;
@@ -899,7 +1109,7 @@ function openTopic(t){
     b.onclick=()=>{[...tabs.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');mode=m;start();};tabs.appendChild(b);});
   mode=t.modes[0]; start();
 }
-document.getElementById('back').onclick=()=>{topicEl.hidden=true;home.hidden=false;speechSynthesis.cancel();renderHome();};
+document.getElementById('back').onclick=()=>{topicEl.hidden=true;home.hidden=false;speechSynthesis.cancel();if(navUnit)openUnit(navUnit);else renderHome();};
 document.getElementById('restart').onclick=()=>start();
 
 function start(){
