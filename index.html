@@ -558,7 +558,7 @@ function bTranslate(list,dir){ // dir 'ru' EN->RU, 'en' RU->EN
   return shuffle(list).map(d=>{
     if(dir==='ru') return {t:'choice',lab:'Переведи на русский',promptHTML:cap(d.en),speak:d.en,noGloss:true,
       options:shuffle([d.ru,...distract(list.map(x=>x.ru),d.ru,3)]),correct:d.ru};
-    return {t:'choice',lab:'Скажи по-английски',promptHTML:d.ru,speak:d.en,
+    return {t:'choice',lab:'Скажи по-английски',promptHTML:d.ru,speak:d.en,tr:d.ru,
       options:shuffle([cap(d.en),...distract(list.map(x=>cap(x.en)),cap(d.en),3)]),correct:cap(d.en),lockSpk:true};
   });
 }
@@ -766,7 +766,7 @@ function bPhraseGap(list,pool){return shuffle(list).map(d=>({t:'choice',lab:'В�
   promptHTML:d.a+'<span class="gap"></span>'+d.b,speak:(d.a+d.ans+d.b).replace(/A:|B:/g,''),
   options:shuffle(pool.slice()),correct:d.ans}));}
 function bPick(list,pool,lab){return shuffle(list).map(d=>({t:'choice',lab:lab||'Выбери слово',
-  promptHTML:d.d,speak:d.w,noGloss:true,options:shuffle([d.w,...distract(pool,d.w,3)]),correct:d.w}));}
+  promptHTML:d.d,speak:d.w,tr:d.ru,options:shuffle([d.w,...distract(pool,d.w,3)]),correct:d.w}));}
 function bOdd(list){return shuffle(list).map(d=>({t:'choice',lab:'Лишнее слово',grid:true,
   promptHTML:'Найди лишнее слово',speak:d.w.join(', '),noGloss:true,options:shuffle(d.w.slice()),correct:d.odd,after:d.why}));}
 function bOddSound(list){return shuffle(list).map(d=>({t:'choice',lab:'Другой звук',grid:true,
@@ -821,18 +821,18 @@ const HW3_SOC=[
 
 /* --- File 4A · Домашка (стр. 26–28) --- */
 const HW4A_DEF=[
- {w:"text / message",d:"to send sb a message using a mobile phone"},
- {w:"put sb on hold",d:"to make a caller wait until the person is free"},
- {w:"call back",d:"to phone sb again, or phone sb who called you"},
- {w:"go off",d:"to start ringing"},
- {w:"leave a message",d:"to record information for sb to listen to later"},
- {w:"voicemail",d:"a system that stores messages to listen to later"},
- {w:"cut sb off",d:"to stop or interrupt sb's phone conversation"},
- {w:"dial",d:"to push the buttons on a phone to call a number"},
- {w:"ringtone",d:"the sound your phone makes when sb is calling you"},
- {w:"swipe",d:"to move content across a screen with your finger"},
- {w:"engaged / busy",d:"a phone is in use and can't be called"},
- {w:"hang up",d:"to end a phone conversation and put the phone down"},
+ {w:"text / message",d:"to send sb a message using a mobile phone",ru:"отправить сообщение / СМС"},
+ {w:"put sb on hold",d:"to make a caller wait until the person is free",ru:"поставить в ожидание"},
+ {w:"call back",d:"to phone sb again, or phone sb who called you",ru:"перезвонить"},
+ {w:"go off",d:"to start ringing",ru:"зазвонить, сработать"},
+ {w:"leave a message",d:"to record information for sb to listen to later",ru:"оставить сообщение"},
+ {w:"voicemail",d:"a system that stores messages to listen to later",ru:"голосовая почта"},
+ {w:"cut sb off",d:"to stop or interrupt sb's phone conversation",ru:"прервать связь, разъединить"},
+ {w:"dial",d:"to push the buttons on a phone to call a number",ru:"набирать номер"},
+ {w:"ringtone",d:"the sound your phone makes when sb is calling you",ru:"рингтон"},
+ {w:"swipe",d:"to move content across a screen with your finger",ru:"листать (свайпом)"},
+ {w:"engaged / busy",d:"a phone is in use and can't be called",ru:"занято (линия занята)"},
+ {w:"hang up",d:"to end a phone conversation and put the phone down",ru:"повесить трубку"},
 ];
 const HW4A_DEF_POOL=HW4A_DEF.map(x=>x.w);
 const HW4A_NY=[
@@ -1215,7 +1215,12 @@ function choose(btn,o,it,box){
   [...box.children].forEach(c=>{if(!c.classList.contains('ok')&&!c.classList.contains('no'))c.classList.add('dim');});
   const sb=document.getElementById('spk');if(sb)sb.disabled=false;
   if(it.speak)speak(it.speak);
-  if(it.after){const a=document.getElementById('ans');a.textContent=it.after;a.classList.add('show');}
+  // показать перевод правильного ответа
+  const corr=it.correct||'';let tr=it.tr;
+  if(!tr&&/[a-z]/i.test(corr)){const k=corr.toLowerCase().replace(/[^a-z0-9']/g,'');if(GLOSS[k])tr=GLOSS[k];}
+  let msg=it.after||'';
+  if(tr)msg=(msg?msg+'<br>':'')+'✓ <b>'+corr+'</b> — '+tr;
+  if(msg){const a=document.getElementById('ans');a.innerHTML=msg;a.classList.add('show');enhanceGloss(a);}
   setBar();document.getElementById('next').classList.add('show');
 }
 function judge(btn,val,it,box){
